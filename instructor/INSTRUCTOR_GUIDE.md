@@ -29,11 +29,12 @@ Audience: total beginners on Windows lab PCs, possibly **without admin rights**.
 | 10:45 | 2 Git | Draw *working → staging → commit → push* | `git commit` without `-m` opens an editor (`:wq`) |
 | 11:45 | 3 Docker | Image = recipe, container = the cake 🎂 | Port pop-ups; leftover containers holding ports |
 | 13:30 | 4 Compose | Services talk by name; data lives in Redis | Lab 3 container still on port 8000 → `docker rm -f my-app` |
-| 14:15 | 5 CI/CD | Show the red ❌ run on the projector, then fix it together | First run may need "enable workflows" in the Actions tab |
-| 15:30 | 6 Cloud/IaC/Monitoring | Pizza-as-a-service; plan/apply/destroy; "monitoring = smoke alarm" | Grafana "No data" until traffic is generated |
-| 16:30 | 7 Wrap-up | Quiz, roadmap, **stop Codespaces** | |
+| 14:15 | 💬 Discussion (30 min, no hands-on) | Show the 5 diagrams. VM = house, container = apartment; Kubernetes = robot keeping "3 copies" alive; monolith vs microservices = kitchen vs food court; API = the kitchen's order window. Optional 1-min demo: `curl localhost:8000/` vs `curl localhost:8000/health` | Don't let it turn into a Kubernetes tutorial. Park deep questions for the [roadmap](../docs/roadmap.md). Stress "start simple" |
+| 14:45 | 5 CI/CD | Show the red ❌ run on the projector, then fix it together | First run may need "enable workflows" in the Actions tab |
+| 16:00 | 6 Cloud/IaC/Monitoring | Pizza-as-a-service; plan/apply/destroy; "monitoring = smoke alarm" | Grafana "No data" until traffic is generated |
+| 17:00 | 7 Wrap-up | Quiz, roadmap, **stop Codespaces** | |
 
-**If you're running late**, these are safe to skip: Lab 2 step 6 (branches/PR), Lab 3 mini challenge, Lab 6 Part A (talk through it instead), the Terraform Docker stretch.
+**If you're running late**, shorten the discussion to Part 1 only (15 min; give Part 2 as reading). Also safe to skip: Lab 2 step 6 (branches/PR), Lab 3 mini challenge, Lab 6 Part A (talk through it instead), the Terraform Docker stretch.
 
 **Early finishers:** mini challenges at the end of each lab; [roadmap](../docs/roadmap.md) project ideas.
 

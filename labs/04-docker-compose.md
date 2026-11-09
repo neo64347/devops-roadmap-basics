@@ -89,4 +89,4 @@ Run `docker compose down`, then `up -d` again. Is the count kept? (No! `down` de
 | Visitor count always 1 | Make sure you started with `docker compose`, not `docker run` (only Compose sets `REDIS_HOST`) |
 | Changes not showing | Use `docker compose up -d --build` after changing the app code |
 
-➡️ Next: [Lab 5: CI/CD with GitHub Actions](05-ci-cd-github-actions.md)
+➡️ Next: [💬 Discussion: Containers, Kubernetes & app architecture](04b-discussion-containers-kubernetes-architecture.md)

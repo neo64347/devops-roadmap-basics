@@ -9,6 +9,7 @@ You took one app through the full DevOps loop:
 | ✅ | Tracked changes and collaborated with branches and pull requests | Git, GitHub |
 | ✅ | Packaged an app so it runs the same everywhere | Docker |
 | ✅ | Ran a multi-container app with one command | Docker Compose |
+| 💬 | Understood VMs vs containers, Kubernetes, monolith vs microservices, web app vs API | Discussion |
 | ✅ | Automated testing and building on every push | GitHub Actions |
 | ✅ | Created and destroyed infrastructure from code | Terraform |
 | ✅ | Watched an app live and caught an outage | Prometheus, Grafana |
@@ -21,6 +22,8 @@ That is the foundation of every DevOps job. 🙌
 3. Why is it better to create servers with **Terraform** than by clicking in a web console?
 4. What does `git push` do?
 5. Your app is down at 2 a.m. What tells you before users complain?
+6. Name one difference between a **VM** and a **container**, and one job **Kubernetes** does that Docker Compose doesn't.
+7. A 3-person start-up: **monolith** or **microservices**? Is `/health` part of a **web app** or an **API**?
 
 <details>
 <summary>Answers</summary>
@@ -30,6 +33,8 @@ That is the foundation of every DevOps job. 🙌
 3. It's repeatable, reviewable in Git, and documents itself.
 4. Sends your local commits to GitHub.
 5. Monitoring and alerting (e.g. Prometheus + Grafana).
+6. A VM has its own OS (GBs, minutes to boot); a container shares the host kernel (MBs, seconds). Kubernetes runs containers across many machines and self-heals or scales them.
+7. Usually a monolith (simpler, faster to start). `/health` is an API: it returns JSON for machines.
 </details>
 
 ## 🗺️ What to learn next

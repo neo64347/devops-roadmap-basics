@@ -42,10 +42,11 @@ Step-by-step walkthrough: [Lab 0: Setup](labs/00-setup.md).
 | 11:45 | [3. Docker basics](labs/03-docker-basics.md) | Run containers and build your own image |
 | 12:45 | 🍽️ Lunch | |
 | 13:30 | [4. Docker Compose](labs/04-docker-compose.md) | Run the app and a database together |
-| 14:15 | [5. CI/CD with GitHub Actions](labs/05-ci-cd-github-actions.md) | Automatic tests and builds on every push |
-| 15:15 | ☕ Break | |
-| 15:30 | [6. Cloud, IaC & Monitoring](labs/06-cloud-iac-monitoring.md) | Terraform basics + a live Grafana dashboard |
-| 16:30 | [7. Wrap-up & your roadmap](labs/07-wrap-up.md) | What to learn next |
+| 14:15 | [💬 Discussion: Containers, Kubernetes & architecture](labs/04b-discussion-containers-kubernetes-architecture.md) | VMs vs containers, Kubernetes, monolith vs microservices, web app vs API *(talk only, no hands-on)* |
+| 14:45 | [5. CI/CD with GitHub Actions](labs/05-ci-cd-github-actions.md) | Automatic tests and builds on every push |
+| 15:45 | ☕ Break | |
+| 16:00 | [6. Cloud, IaC & Monitoring](labs/06-cloud-iac-monitoring.md) | Terraform basics + a live Grafana dashboard |
+| 17:00 | [7. Wrap-up & your roadmap](labs/07-wrap-up.md) | What to learn next |
 
 ## 📁 What's in this repo
 
