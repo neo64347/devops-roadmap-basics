@@ -25,7 +25,8 @@ You'll set up **WSL2 + Ubuntu + Docker Engine**: the lightest, free way to run D
 | 2 | Docker Engine + Compose | Ubuntu | Containers (Labs 3, 4, 6) |
 | 3 | Git, Python 3, pip, venv | Ubuntu | Labs 1, 2, 5 |
 | 4 | Terraform | Ubuntu | Lab 6 |
-| 5 | VS Code + WSL extension | Windows | Editor (optional but recommended) |
+| 5 | VS Code + WSL extension | Windows | Editor and terminal |
+| 6 | GitHub CLI (`gh`) | Ubuntu | Sign in to GitHub, push, create repos and pull requests from the terminal |
 
 ⏱️ About **30–45 minutes**, mostly downloads.
 
@@ -93,23 +94,71 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install -y terraform
 ```
 
-## 6. Install VS Code (on Windows)
-1. Download and install from <https://code.visualstudio.com>.
+## 6. Install VS Code and open it in Ubuntu
+1. Download and install VS Code on **Windows** from <https://code.visualstudio.com>.
 2. Open VS Code → Extensions (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>) → install **WSL** (by Microsoft).
+3. In the **Ubuntu** window, run:
+   ```bash
+   cd ~
+   code .
+   ```
+   The first time, VS Code installs a small server inside Ubuntu (about 1 minute).
+4. Check the **bottom-left corner** of VS Code. It must say **WSL: Ubuntu**. If not: press <kbd>F1</kbd> → type `WSL: Connect to WSL` → Enter.
+5. Open the built-in terminal: <kbd>Ctrl</kbd>+<kbd>`</kbd> (the key above Tab), or **Terminal → New Terminal**.
 
-## 7. Get the labs
-Make your own copy first (on GitHub: **Use this template → Create a new repository**), then in Ubuntu:
+> From now on, type every command in the **VS Code terminal**. It's the same Ubuntu terminal, right next to your files.
+
+## 7. Install GitHub CLI and sign in
+The **GitHub CLI** (`gh`) lets you sign in to GitHub once and then push, create repos and open pull requests from the terminal. No passwords or tokens to copy.
+
+In the VS Code terminal:
+```bash
+sudo mkdir -p -m 755 /etc/apt/keyrings
+wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+sudo apt update && sudo apt install -y gh
+gh --version
+```
+
+Sign in:
+```bash
+gh auth login
+```
+Answer the questions with the arrow keys and <kbd>Enter</kbd>:
+
+| Question | Choose |
+|---|---|
+| Where do you use GitHub? | **GitHub.com** |
+| Preferred protocol for Git operations? | **HTTPS** |
+| Authenticate Git with your GitHub credentials? | **Yes** |
+| How would you like to authenticate? | **Login with a web browser** |
+
+`gh` shows a **one-time code** like `ABCD-1234`. Copy it, press <kbd>Enter</kbd>, and a browser page opens (if it doesn't, <kbd>Ctrl</kbd>+click the `https://github.com/login/device` link). Paste the code → **Continue** → **Authorize GitHub CLI**.
+
+✅ Check:
+```bash
+gh auth status
+```
+It shows `✓ Logged in to github.com account YOUR-USERNAME`. Git now uses this login for `git push`, so you won't be asked for a password.
+
+> Never paste a GitHub password or token into chat or a file. `gh auth login` stores the login safely for you. To sign out: `gh auth logout`.
+
+## 8. Get the labs
+Create **your own copy** of the labs from the template and download it, in one command (still in the VS Code terminal):
 ```bash
 cd ~
-git clone https://github.com/YOUR-USERNAME/devops-roadmap-basics.git
+gh repo create devops-roadmap-basics --template neo64347/devops-roadmap-basics --public --clone
 cd devops-roadmap-basics
-code .
+code -r .
 ```
-VS Code opens connected to Ubuntu ("WSL: Ubuntu" in the bottom-left corner).
+`code -r .` reopens VS Code in the project folder. Open the terminal again with <kbd>Ctrl</kbd>+<kbd>`</kbd>.
+
+> Prefer the website? On GitHub click **Use this template → Create a new repository**, then run `gh repo clone YOUR-USERNAME/devops-roadmap-basics`.
 
 > Keep your projects **inside Ubuntu** (`~/...`), not under `/mnt/c/...`. It's much faster.
 
-## 8. Set up Python for the labs (one time)
+## 9. Set up Python for the labs (one time)
 Ubuntu doesn't allow `pip install` system-wide, so create a **virtual environment**:
 ```bash
 cd ~/devops-roadmap-basics
@@ -119,9 +168,10 @@ pip install -r app/requirements.txt -r app/requirements-dev.txt
 ```
 Your prompt now starts with `(.venv)`. **Each time you open a new terminal**, run `source .venv/bin/activate` before Lab 5's `pytest`.
 
-## 9. ✅ Final check
+## 10. ✅ Final check
 ```bash
-git --version && docker --version && docker compose version && python3 --version && terraform --version
+git --version && gh --version && docker --version && docker compose version && python3 --version && terraform --version
+gh auth status
 docker compose up -d --build && sleep 5 && curl localhost:8000 && docker compose down
 ```
 ✅ The last command prints `Hello from Docker Compose! You are visitor #1.`
@@ -140,7 +190,12 @@ You're ready. Start at [Lab 1](../labs/01-linux-basics.md) (skip the Codespaces 
 | PowerShell: `...profile.ps1 cannot be loaded because running scripts is disabled` | Harmless, keep going. To fix it: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer **Y**, reopen PowerShell |
 | Error `0x80370102` | Same as above: virtualization is off in BIOS |
 | `permission denied ... docker.sock` | You skipped reopening Ubuntu after `usermod`. Close and reopen it (or run `newgrp docker`) |
-| `error: externally-managed-environment` on pip | Use the virtual environment (step 8) |
+| `error: externally-managed-environment` on pip | Use the virtual environment (step 9) |
+| `code: command not found` in Ubuntu | Install the VS Code **WSL** extension, close and reopen Ubuntu, try `code .` again |
+| VS Code bottom-left doesn't say **WSL: Ubuntu** | <kbd>F1</kbd> → `WSL: Connect to WSL`. Commands in a plain Windows terminal won't find `docker` or `gh` |
+| `gh auth login` doesn't open a browser | <kbd>Ctrl</kbd>+click the `https://github.com/login/device` link, or open it in your browser and paste the code |
+| `git push` asks for a username/password | Run `gh auth setup-git` (or `gh auth login` again and answer **Yes** to "Authenticate Git") |
+| `gh: command not found` | Rerun step 7, or open a new terminal |
 | `localhost:8000` doesn't open in the Windows browser | Run `wsl --shutdown` in PowerShell, reopen Ubuntu, start the containers again |
 | WSL uses too much memory | Create `C:\Users\<you>\.wslconfig` with `[wsl2]` and `memory=4GB` on the next line, then `wsl --shutdown` |
 | Ports 8000/3000 "already in use" | Another program uses them. Stop it, or change the left-hand port in `compose.yaml` (e.g. `"8001:8000"`) |

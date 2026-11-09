@@ -46,6 +46,12 @@ git push
 ```
 Go to **Actions** and watch it go 🟡 → ✅ (about 1 minute).
 
+> 💡 **Or watch it from the VS Code terminal** with GitHub CLI:
+> ```bash
+> gh run watch      # pick the latest run; it updates live until it finishes
+> gh run list       # recent runs with ✓ or X
+> ```
+
 ### 4. Break it on purpose 🔨
 Change the app's greeting in `app/app.py`:
 ```python

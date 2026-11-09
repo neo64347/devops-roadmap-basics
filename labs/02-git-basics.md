@@ -23,6 +23,19 @@ git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
 ```
 
+### 1b. Check you're signed in with GitHub CLI
+**GitHub CLI** (`gh`) is GitHub in your terminal. In the VS Code terminal (<kbd>Ctrl</kbd>+<kbd>`</kbd>):
+```bash
+gh auth status
+```
+- **In Codespaces** you're already signed in. You'll see `✓ Logged in to github.com`.
+- **On your own PC** (Windows setup guide, step 7): if it says *not logged in*, run `gh auth login` and choose **GitHub.com → HTTPS → Yes → Login with a web browser**.
+
+Try it:
+```bash
+gh repo view --web     # opens your repo on GitHub in the browser
+```
+
 ### 2. Look at the history
 ```bash
 git status        # what has changed?
@@ -64,18 +77,31 @@ echo "- Branches keep main safe" >> NOTES.md
 git commit -am "Add a note about branches"
 git push -u origin my-first-branch
 ```
-On GitHub you'll see a yellow banner: **Compare & pull request**. Click it → **Create pull request** → **Merge pull request** → **Confirm**.
-
-Back in the terminal, update your local `main`:
+Now open a **pull request (PR)**: a request to merge your branch into `main`. Do it from the VS Code terminal with GitHub CLI:
 ```bash
-git switch main
-git pull
+gh pr create --fill            # creates the PR (title and description from your commit)
+gh pr view --web               # look at it on GitHub
+gh pr merge --merge --delete-branch   # merge it, delete the branch, switch back to main
+```
+`gh pr merge` also switches you back to `main` and pulls the merged change. Check:
+```bash
+git branch        # * main
 cat NOTES.md      # your branch's line is now in main
 ```
 
+<details><summary>Prefer clicking? Do it on the website instead</summary>
+
+On GitHub you'll see a yellow banner: **Compare & pull request**. Click it → **Create pull request** → **Merge pull request** → **Confirm**. Then in the terminal:
+```bash
+git switch main
+git pull
+```
+You can also use the **GitHub Pull Requests** panel in the VS Code sidebar.
+</details>
+
 ## ✅ Checkpoint
 - [ ] `NOTES.md` is visible on GitHub with 3 notes
-- [ ] You merged one pull request
+- [ ] You merged one pull request (`gh pr list --state merged` shows it)
 - [ ] You can explain *add → commit → push* to your neighbour
 
 ## 🏋️ Mini challenge
@@ -90,6 +116,9 @@ git restore NOTES.md
 | `Please tell me who you are` | Do step 1 |
 | `nothing to commit` | You haven't changed anything, or forgot to save the file (<kbd>Ctrl</kbd>+<kbd>S</kbd>) |
 | `rejected… fetch first` | Someone (maybe you, on GitHub) changed `main`. Run `git pull`, then `git push` again |
+| `gh: command not found` | Codespaces: rebuild with **F1 → Codespaces: Rebuild Container**. Own PC: [Windows setup step 7](../docs/local-setup-windows.md#7-install-github-cli-and-sign-in) |
+| `gh` says *not logged in* or `git push` asks for a password | Run `gh auth login`, then `gh auth setup-git` |
+| `gh pr create` asks "Where should we push the branch?" | Choose your own repo (`YOUR-USERNAME/devops-roadmap-basics`) |
 | Stuck in a strange editor after `git commit` | You forgot `-m`. Type `:wq` and press <kbd>Enter</kbd> to save and exit |
 
 ➡️ Next: [Lab 3: Docker basics](03-docker-basics.md)

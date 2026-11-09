@@ -29,6 +29,19 @@
 | `git switch main` | Go back to main |
 | `git restore file` | Throw away uncommitted changes to a file |
 
+## GitHub CLI (`gh`)
+| Command | What it does |
+|---|---|
+| `gh auth login` / `gh auth status` | Sign in (browser) / check who you are |
+| `gh auth setup-git` | Let `git push` use your gh login |
+| `gh repo create NAME --template OWNER/REPO --public --clone` | New repo from a template, downloaded |
+| `gh repo clone OWNER/REPO` | Download a repo |
+| `gh repo view --web` | Open the repo in the browser |
+| `gh pr create --fill` | Open a pull request from your branch |
+| `gh pr list` / `gh pr view --web` | List PRs / open one in the browser |
+| `gh pr merge --merge --delete-branch` | Merge the PR and clean up the branch |
+| `gh run list` / `gh run watch` | See GitHub Actions runs / follow one live |
+
 ## Docker
 | Command | What it does |
 |---|---|
