@@ -58,7 +58,7 @@ Step-by-step walkthrough: [Lab 0: Setup](labs/00-setup.md).
 | `iac/` | Terraform examples (no cloud account needed) |
 | `monitoring/` | Prometheus and Grafana configuration |
 | `labs/` | Step-by-step guides for each session |
-| `scripts/` | `start.sh` starts the app, Grafana and Prometheus and prints the links ([ports guide](docs/ports.md)) |
+| `scripts/` | `start.sh` starts the app, Grafana and Prometheus and prints the links ([ports guide](docs/ports.md)) · `cleanup.sh` stops and removes all lab containers after the session |
 | `docs/` | [Run & open the 3 ports](docs/ports.md), [Cheat sheet](docs/cheatsheet.md), [Windows local setup](docs/local-setup-windows.md), [What to learn next](docs/roadmap.md) |
 | `instructor/` | [Instructor guide](instructor/INSTRUCTOR_GUIDE.md): timing, prep checklist and backup plans |
 

@@ -19,6 +19,11 @@ Audience: total beginners on Windows lab PCs, possibly **without admin rights**.
 - [ ] Start Lab 0 **first thing**. Codespace creation takes 1–2 minutes and is the most common blocker.
 - [ ] Put the agenda, repo link and Wi-Fi details on the screen.
 - [ ] Pair students up: a "driver" and a "navigator" who swap each lab.
+- [ ] **Before everyone leaves:** on the projector, run `bash scripts/cleanup.sh`, then stop the Codespace (Lab 7, *Before you leave*). Walk the room and check that no one leaves a Codespace running.
+
+### After the day
+- [ ] Stop your own demo stack: `bash scripts/cleanup.sh` (add `--all` to free disk space).
+- [ ] Check <https://github.com/codespaces> for running or leftover Codespaces of yours and delete the ones you don't need.
 
 ## ⏱️ Timing & teaching notes
 

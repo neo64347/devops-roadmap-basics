@@ -119,3 +119,6 @@ Start all three with `bash scripts/start.sh` ([how to open them](ports.md)).
 | `bash scripts/start.sh` | Start everything, print links for 8000/3000/9090 |
 | `bash scripts/start.sh status` | ✅/❌ per port + links |
 | `bash scripts/start.sh stop` | Stop the lab containers |
+| `bash scripts/cleanup.sh` | **End of session:** stop and remove *all* lab containers (Labs 3, 4, 6) |
+| `bash scripts/cleanup.sh --all` | Also delete the lab images (frees about 1 GB) |
+| `gh codespace stop` | Stop your Codespace (saves free hours) |

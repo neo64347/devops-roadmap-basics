@@ -48,8 +48,19 @@ See **[docs/roadmap.md](../docs/roadmap.md)** for a step-by-step path, free reso
    git push -u origin end-of-seminar
    gh pr create --fill && gh pr checks --watch && gh pr merge --merge --delete-branch
    ```
-2. **Stop your Codespace** to save your free hours: <https://github.com/codespaces> → **⋯** → **Stop codespace**.
-3. Your repository stays on GitHub. It's the start of your DevOps portfolio! ⭐
+2. **Stop all the lab containers** (web app, Redis, Prometheus, Grafana, `web1`, `my-app`, `terraform-nginx`):
+   ```bash
+   bash scripts/cleanup.sh
+   ```
+   ✅ It ends with *Containers still running: none*. Nothing else on your machine is touched.
+   > On your **own PC** and need the disk space back? `bash scripts/cleanup.sh --all` also deletes the lab's images (about 1 GB). They download again next time you start.
+3. **Stop your Codespace** to save your free hours: <https://github.com/codespaces> → **⋯** → **Stop codespace** (or in the terminal: `gh codespace stop`).
+4. **Optional, set it and forget it:** <https://github.com/settings/codespaces> →
+   - **Default idle timeout:** `30` minutes (or less). An idle Codespace stops itself, and all its containers stop with it.
+   - **Default retention period:** e.g. `7` days. Stopped Codespaces you don't use are deleted automatically, so they don't use your free storage.
+5. Your repository stays on GitHub. It's the start of your DevOps portfolio! ⭐
+
+> 💡 **Why this matters (it's real DevOps!):** forgotten servers and containers cost money and can be a security risk. Real teams clean up after tests the same way: `terraform destroy`, `docker compose down`, auto-shutdown schedules.
 
 ## 🙏 Feedback
 Tell the instructor one thing you liked and one thing to improve. Thank you!
