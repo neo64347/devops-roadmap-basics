@@ -46,6 +46,16 @@
 | `gh pr merge --merge --delete-branch` | Merge the PR and clean up the branch |
 | `gh run list` / `gh run watch` | See GitHub Actions runs / follow one live |
 
+## Python & pip (own PC)
+| Command | What it does |
+|---|---|
+| `python -m venv .venv` | Create a virtual environment (once per project) |
+| `source .venv/bin/activate` / `deactivate` | Turn it on / off (prompt shows `(.venv)`) |
+| `python -m pip install -r app/requirements.txt` | Install the packages listed in a file |
+| `python -m pip install --upgrade pip` | Update pip itself |
+| `pip list` / `pip show flask` | Installed packages / details of one |
+| `python -m pytest -q` | Run the tests |
+
 ## Docker
 | Command | What it does |
 |---|---|

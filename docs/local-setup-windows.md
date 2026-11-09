@@ -81,12 +81,20 @@ docker compose version
 > ```
 > If not, add those two lines (`sudo nano /etc/wsl.conf`), then in **PowerShell** run `wsl --shutdown` and reopen Ubuntu.
 
-## 4. Install Git, Python and tools
+## 4. Install Git, Python 3 and pip
+Ubuntu already includes Python 3. These packages add **pip** (Python's package installer), **venv** (private package folders per project) and make the `python` command point to Python 3:
 ```bash
-sudo apt install -y git curl python3 python3-pip python3-venv
+sudo apt install -y git curl python3 python3-pip python3-venv python-is-python3
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
 ```
+✅ Check:
+```bash
+python --version      # Python 3.12.x
+pip3 --version        # pip 24.x from /usr/lib/python3/...
+```
+
+> **Don't install Python from python.org or the Microsoft Store for these labs.** Everything runs inside Ubuntu, so use the Python in Ubuntu. A Windows Python is a separate install that the labs never use.
 
 ## 5. Install Terraform
 ```bash
@@ -160,15 +168,54 @@ code -r .
 
 > Keep your projects **inside Ubuntu** (`~/...`), not under `/mnt/c/...`. It's much faster.
 
-## 9. Set up Python for the labs (one time)
-Ubuntu doesn't allow `pip install` system-wide, so create a **virtual environment**:
+## 9. Install the lab's Python packages with pip (one time)
+Ubuntu blocks `pip install` for the whole system (you'd get `error: externally-managed-environment`) so you can't break Ubuntu's own Python. Instead, give the project its own **virtual environment**: a `.venv` folder that holds this project's packages.
+
+In the VS Code terminal:
+
+**1. Create and turn on the virtual environment**
 ```bash
 cd ~/devops-roadmap-basics
-python3 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
-pip install -r app/requirements.txt -r app/requirements-dev.txt
 ```
-Your prompt now starts with `(.venv)`. **Each time you open a new terminal**, run `source .venv/bin/activate` before Lab 5's `pytest`.
+Your prompt now starts with `(.venv)`. Check that `python` and `pip` come from the project:
+```bash
+which python pip     # both end in /devops-roadmap-basics/.venv/bin/...
+```
+
+**2. Update pip, then install the packages**
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r app/requirements.txt -r app/requirements-dev.txt
+```
+`requirements.txt` lists the app's packages (Flask, Gunicorn, Prometheus client, Redis). `requirements-dev.txt` adds **pytest** for the tests. The versions are pinned, so you get the same versions as the pipeline in Lab 5.
+
+> 💡 `python -m pip` means "the pip that belongs to this python", so you can never install into the wrong Python by mistake.
+
+**3. Check it worked**
+```bash
+pip list                      # Flask, gunicorn, prometheus_client, pytest, redis…
+cd app && python -m pytest -q && cd ..
+```
+✅ You see `3 passed`.
+
+**4. Tell VS Code to use it**
+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → **Python: Select Interpreter** → choose **`./.venv/bin/python`**. VS Code then uses the venv for running, testing and auto-complete, and turns it on in new terminals automatically.
+
+**Every new terminal:** if the prompt doesn't start with `(.venv)`, run `source .venv/bin/activate` again (in bash and Zsh alike).
+
+| pip command | What it does |
+|---|---|
+| `python -m pip install NAME` | Install a package into the active venv |
+| `python -m pip install -r FILE` | Install everything listed in a requirements file |
+| `pip list` | Show installed packages |
+| `pip show flask` | Details of one package (version, location) |
+| `pip freeze > requirements.txt` | Save the exact versions you have |
+| `python -m pip uninstall NAME` | Remove a package |
+| `deactivate` | Turn the venv off |
+
+> Broke something? Delete the folder and start again: `deactivate; rm -rf .venv`, then repeat steps 1–2.
 
 ## 10. ✅ Final check
 ```bash
@@ -301,7 +348,12 @@ It shows the list and asks **Install them? [y/N]**. Type `y`. Each extension is 
 | PowerShell: `...profile.ps1 cannot be loaded because running scripts is disabled` | Harmless, keep going. To fix it: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer **Y**, reopen PowerShell |
 | Error `0x80370102` | Same as above: virtualization is off in BIOS |
 | `permission denied ... docker.sock` | You skipped reopening Ubuntu after `usermod`. Close and reopen it (or run `newgrp docker`) |
-| `error: externally-managed-environment` on pip | Use the virtual environment (step 9) |
+| `error: externally-managed-environment` on pip | The venv isn't on. Run `source .venv/bin/activate` (step 9), then install again |
+| `python: command not found` | Run `sudo apt install -y python-is-python3`, or type `python3` instead |
+| `No module named venv` / `ensurepip is not available` | Run `sudo apt install -y python3-venv`, then `rm -rf .venv` and create it again |
+| `No module named flask` / `pytest: command not found` | The venv isn't on in this terminal. Run `source .venv/bin/activate` |
+| VS Code shows *Import "flask" could not be resolved* | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → **Python: Select Interpreter** → `./.venv/bin/python` |
+| `python` opens the Microsoft Store (in PowerShell) | You're in Windows, not Ubuntu. Use the VS Code terminal that says **WSL: Ubuntu** |
 | `code: command not found` in Ubuntu | Install the VS Code **WSL** extension, close and reopen Ubuntu, try `code .` again |
 | VS Code bottom-left doesn't say **WSL: Ubuntu** | <kbd>F1</kbd> → `WSL: Connect to WSL`. Commands in a plain Windows terminal won't find `docker` or `gh` |
 | `gh auth login` doesn't open a browser | <kbd>Ctrl</kbd>+click the `https://github.com/login/device` link, or open it in your browser and paste the code |
