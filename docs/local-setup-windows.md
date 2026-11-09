@@ -224,6 +224,49 @@ echo $SHELL     # /usr/bin/zsh
 - Type a wrong command like `dokcer`: it turns **red** before you even press <kbd>Enter</kbd>.
 - Shortcuts from the plugins: `gst` = `git status`, `gco main` = `git checkout main`, `gp` = `git push`. Run `alias | grep git` to see them all.
 
+**6. Clone and pull repos with GitHub CLI in Zsh**
+
+Make sure `gh` is installed. If you did step 7 it already is (it works the same in Zsh and bash):
+```bash
+gh --version || echo "gh is not installed yet"
+```
+<details><summary>Not installed? Install GitHub CLI now (in your Zsh terminal)</summary>
+
+```bash
+sudo mkdir -p -m 755 /etc/apt/keyrings
+wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+sudo apt update && sudo apt install -y gh
+gh --version
+```
+</details>
+
+**Sign in first.** `gh` won't clone anything, not even a public repo, until you're logged in:
+```bash
+gh auth status || gh auth login     # GitHub.com → HTTPS → Yes → Login with a web browser
+gh auth setup-git                   # let git pull/push use the same login
+```
+The login is saved in `~/.config/gh`, so it's shared by Zsh, bash and VS Code. You only do this once.
+
+**Clone** (download) a repo:
+```bash
+cd ~
+gh repo clone YOUR-USERNAME/devops-roadmap-basics     # your copy of the labs
+cd devops-roadmap-basics
+code -r .                                             # reopen VS Code in this folder
+```
+Tip: type `gh repo cl` and press <kbd>Tab</kbd>. The `gh` plugin completes the command for you.
+
+**Pull** (get the latest changes) any time:
+```bash
+cd ~/devops-roadmap-basics
+git pull          # or the Zsh shortcut: gl
+gh repo view      # quick look at the repo's README in the terminal
+```
+
+> Your prompt shows the branch and a ✗ when you have uncommitted changes, e.g. `➜  devops-roadmap-basics git:(main) ✗`. Commit or `git stash` before you pull.
+
 > **Your settings live in `~/.zshrc`**, not `~/.bashrc`. To change the theme, edit `ZSH_THEME="robbyrussell"` in `~/.zshrc` (try `"agnoster"` with a [Nerd Font](https://www.nerdfonts.com)), then run `source ~/.zshrc`.
 >
 > **Python venv:** `source .venv/bin/activate` works the same in Zsh.
@@ -249,6 +292,8 @@ echo $SHELL     # /usr/bin/zsh
 | VS Code terminal still opens **bash** after step 11 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → **Terminal: Select Default Profile** → **zsh**, then trash all terminals and open a new one |
 | Zsh shows `[oh-my-zsh] plugin 'zsh-autosuggestions' not found` | Step 11.3's `git clone` didn't finish. Run both `git clone` commands again |
 | Prompt shows `?` boxes or broken arrows | You chose a theme that needs a Nerd Font. Set `ZSH_THEME="robbyrussell"` in `~/.zshrc` and run `source ~/.zshrc` |
+| `gh repo clone` says *To get started with GitHub CLI, please run: gh auth login* | Sign in first: `gh auth login`, then clone again |
+| `git pull` asks for a username/password in Zsh | Run `gh auth setup-git` |
 | Command worked in bash but not in Zsh | Wrap URLs or arguments with `?`, `*` or `[ ]` in quotes, e.g. `curl "http://localhost:8000/?x=1"` |
 | `localhost:8000` doesn't open in the Windows browser | Run `wsl --shutdown` in PowerShell, reopen Ubuntu, start the containers again |
 | WSL uses too much memory | Create `C:\Users\<you>\.wslconfig` with `[wsl2]` and `memory=4GB` on the next line, then `wsl --shutdown` |
