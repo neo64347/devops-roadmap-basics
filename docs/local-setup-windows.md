@@ -86,13 +86,18 @@ Ubuntu already includes Python 3. These packages add **pip** (Python's package i
 ```bash
 sudo apt install -y git curl python3 python3-pip python3-venv python-is-python3
 git config --global user.name "Your Name"
-git config --global user.email "you@example.com"
+git config --global user.email "YOUR-ID+YOUR-USERNAME@users.noreply.github.com"   # GitHub → Settings → Emails
+git config --global init.defaultBranch main
+git config --global pull.rebase false
+git config --global core.autocrlf input     # keep Linux line endings in WSL
 ```
 ✅ Check:
 ```bash
 python --version      # Python 3.12.x
 pip3 --version        # pip 24.x from /usr/lib/python3/...
 ```
+
+> Git errors like *Please tell me who you are*, *dubious ownership* or *divergent branches*? See [Git config troubleshooting](../labs/02-git-basics.md#-git-config-troubleshooting).
 
 > **Don't install Python from python.org or the Microsoft Store for these labs.** Everything runs inside Ubuntu, so use the Python in Ubuntu. A Windows Python is a separate install that the labs never use.
 

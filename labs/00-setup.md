@@ -1,20 +1,66 @@
 # Lab 0: Setup & What is DevOps? (45 min)
 
 ## 🎯 Goals
-- Understand what DevOps is in one sentence
+- Understand what **DevOps** means, why it exists and what it is *not*
 - Open your own Codespace, the computer you'll use all day
 
 ## 💡 What is DevOps?
 
-> **DevOps is how teams deliver software quickly *and* safely, by automating the boring, error-prone steps between "I wrote some code" and "users are happily using it".**
+![What is DevOps: before, developers and operations are separated by a wall; after, one team uses culture, automation, lean, measurement and sharing around the DevOps loop](../docs/images/what-is-devops.png)
 
-The DevOps loop:
+### What the word means
+**DevOps = Dev + Ops**
+- **Dev (Development):** the people who **build** the software: write code, add features, fix bugs.
+- **Ops (Operations):** the people who **run** the software: servers, networks, keeping it online, safe and fast.
 
+> **DevOps is a way of working where developers and operations work as one team, and automate the steps from "I wrote some code" to "users are happily using it", so software is delivered quickly *and* safely.**
+
+### Why it was needed: the "wall of confusion"
+In the old way, Dev and Ops were separate teams with **opposite goals**:
+
+| Developers wanted… | Operations wanted… |
+|---|---|
+| To ship new features **fast** | **Stability**: "every change can break production" |
+
+Developers finished the code and **threw it over the wall**. Ops installed it by hand, often weeks later. It broke ("but it works on my machine!"), and each team blamed the other. Releases happened every few months and were scary.
+
+The name **DevOps** appeared around **2009** (Patrick Debois organised the first *DevOpsDays* in Belgium) to describe teams that broke down that wall.
+
+### The 5 ideas behind DevOps: CALMS
+| Letter | Idea | What it looks like |
+|---|---|---|
+| **C** | **Culture** | One team shares responsibility from code to production. "You build it, you run it." No blame. |
+| **A** | **Automation** | Robots do repetitive work: tests, builds, deployments, creating servers (today: Docker, GitHub Actions, Terraform) |
+| **L** | **Lean** | Small changes, released often. Small changes are easier to test and easier to undo. |
+| **M** | **Measurement** | Monitor everything and decide with data (today: Prometheus and Grafana) |
+| **S** | **Sharing** | Share knowledge, code and lessons learned. After an incident: fix the process, not the person. |
+
+### How you know it's working
+Teams often track four simple numbers, known as the **DORA metrics**:
+
+| Metric | Question it answers | Good teams |
+|---|---|---|
+| Deployment frequency | How often do we release? | Many times a day |
+| Lead time for changes | How long from commit to production? | Less than a day |
+| Change failure rate | How often does a release cause a problem? | Rarely |
+| Time to restore | When it breaks, how fast do we fix it? | Within an hour |
+
+### ⚠️ What DevOps is *not*
+- ❌ **Not a single tool.** You can't "install DevOps". Tools help, but culture comes first.
+- ❌ **Not just a job title.** A "DevOps engineer" helps teams automate and run software, but the whole team does DevOps.
+- ❌ **Not "Ops does Dev's job" (or the reverse).** It's both working together, with shared goals.
+
+### What does a DevOps engineer do?
+Builds and looks after the **road** that code travels on: CI/CD pipelines, containers, cloud infrastructure as code, monitoring and alerts, security checks. Typical day: improve a pipeline, automate a manual task, help a team deploy, investigate an alert. **Today you'll do a small version of all of these.**
+
+### The DevOps loop
 ```
    PLAN → CODE → BUILD → TEST → RELEASE → DEPLOY → OPERATE → MONITOR
      ▲                                                          │
      └────────────────── learn & improve ◄──────────────────────┘
 ```
+
+> 💬 **Quick discussion (2 min):** Think of an app you use every day (GCash, Facebook, Grab…). It updates almost every week without going down. What has to be **automated** to make that possible?
 
 | Today's topic | Part of the loop | Why it matters |
 |---|---|---|
