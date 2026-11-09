@@ -37,6 +37,11 @@ You'll set up **WSL2 + Ubuntu + Docker Engine**: the lightest, free way to run D
    ```powershell
    wsl --install -d Ubuntu
    ```
+   > **Red error about `Microsoft.PowerShell_profile.ps1 cannot be loaded because running scripts is disabled`?** It's harmless. You can still type commands. To stop it appearing, run this once, answer **Y**, then reopen PowerShell:
+   > ```powershell
+   > Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+   > ```
+   > This lets your own local scripts run (downloaded scripts still need a signature) and only affects your user account.
 3. **Restart** the PC when asked.
 4. After restart an **Ubuntu** window opens (if not: Start → Ubuntu). Wait for it to finish, then create a Linux **username** and **password** (the password is invisible while typing, which is normal. Remember it, `sudo` asks for it).
 
@@ -132,6 +137,7 @@ You're ready. Start at [Lab 1](../labs/01-linux-basics.md) (skip the Codespaces 
 | Problem | Fix |
 |---|---|
 | `wsl --install` says virtualization is not enabled | Enable Intel VT-x / AMD-V in BIOS. Also check **Turn Windows features on or off** → ✅ *Virtual Machine Platform* and ✅ *Windows Subsystem for Linux* |
+| PowerShell: `...profile.ps1 cannot be loaded because running scripts is disabled` | Harmless, keep going. To fix it: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer **Y**, reopen PowerShell |
 | Error `0x80370102` | Same as above: virtualization is off in BIOS |
 | `permission denied ... docker.sock` | You skipped reopening Ubuntu after `usermod`. Close and reopen it (or run `newgrp docker`) |
 | `error: externally-managed-environment` on pip | Use the virtual environment (step 8) |
