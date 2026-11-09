@@ -225,7 +225,11 @@ docker compose up -d --build && sleep 5 && curl localhost:8000 && docker compose
 ```
 ✅ The last command prints `Hello from Docker Compose! You are visitor #1.`
 
-Links like <http://localhost:8000>, <http://localhost:3000> (Grafana) and <http://localhost:9090> (Prometheus) open in your normal **Windows** browser.
+Start all three ports and get the links:
+```bash
+bash scripts/start.sh
+```
+<http://localhost:8000> (web app), <http://localhost:3000> (Grafana) and <http://localhost:9090> (Prometheus) open in your normal **Windows** browser. Stop with `bash scripts/start.sh stop`. Problems? See [Run the app and open the 3 ports](ports.md).
 
 You're ready. Start at [Lab 1](../labs/01-linux-basics.md) (skip the Codespaces part of Lab 0).
 

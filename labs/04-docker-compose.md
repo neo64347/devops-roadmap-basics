@@ -32,7 +32,9 @@ Look at the `web` and `redis` services (ignore `prometheus` and `grafana` for no
 docker compose up -d --build
 docker compose ps
 ```
-✅ Both `web` and `redis` show as **running**.
+✅ Both `web` and `redis` show as **running**, and `web` shows `0.0.0.0:8000->8000` under PORTS.
+
+> 🔌 **Where do I open port 8000?** Codespaces: **PORTS** tab → 🌐 next to 8000 (`localhost` in your own browser won't work). Own PC: <http://localhost:8000>. More help: [Run the app and open the 3 ports](../docs/ports.md).
 
 ### 3. Use the app
 ```bash

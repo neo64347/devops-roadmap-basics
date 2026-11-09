@@ -87,9 +87,17 @@
 | `terraform destroy` | Remove everything it created |
 
 ## Ports used today
-| Port | What |
+Start all three with `bash scripts/start.sh` ([how to open them](ports.md)).
+
+| Port | What | Start with |
+|---|---|---|
+| 8000 | Our web app | `docker compose up -d` |
+| 3000 | Grafana | `docker compose --profile monitoring up -d` |
+| 9090 | Prometheus | `docker compose --profile monitoring up -d` |
+| 8080 | nginx (Lab 3, Terraform stretch) | `docker run -p 8080:80 nginx:alpine` |
+
+| Script | What it does |
 |---|---|
-| 8000 | Our web app |
-| 8080 | nginx (Lab 3, Terraform stretch) |
-| 9090 | Prometheus |
-| 3000 | Grafana |
+| `bash scripts/start.sh` | Start everything, print links for 8000/3000/9090 |
+| `bash scripts/start.sh status` | ✅/❌ per port + links |
+| `bash scripts/start.sh stop` | Stop the lab containers |

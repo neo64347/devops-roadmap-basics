@@ -81,7 +81,9 @@ Make some traffic (sends 50 requests):
 for i in $(seq 1 50); do curl -s localhost:8000 > /dev/null; done
 ```
 
-Open **Grafana**: **PORTS** tab → port **3000** → 🌐. Go to **☰ Dashboards → Seminar → Web App**.
+Open **Grafana**: **PORTS** tab → port **3000** → 🌐 (own PC: <http://localhost:3000>). Go to **☰ Dashboards → Seminar → Web App**.
+
+> 🔌 **Shortcut:** `bash scripts/start.sh` starts all of this and prints the links for ports **8000**, **3000** and **9090** with a ✅ for each. Missing a port? See [Run the app and open the 3 ports](../docs/ports.md).
 
 ![Grafana dashboard](../docs/images/grafana-dashboard.png)
 
