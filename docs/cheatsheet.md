@@ -31,6 +31,7 @@
 | `git diff` | Show unstaged changes |
 | `git switch -c name` | Create and switch to a branch |
 | `git switch main` | Go back to main |
+| `git push -u origin name` | Push a new branch and set its upstream |
 | `git restore file` | Throw away uncommitted changes to a file |
 | `git config --global user.name "Name"` / `user.email "…"` | Who you are (stamped on every commit) |
 | `git config --list --show-origin` | All settings + which file they come from |
@@ -38,6 +39,8 @@
 | `git commit --amend --reset-author --no-edit` | Re-stamp the last commit with your current name/email |
 | `git config --global --add safe.directory PATH` | Fix "dubious ownership" |
 | `git config --global pull.rebase false` | Fix the "divergent branches" question on `git pull` |
+
+**Branch strategy:** keep `main` stable; create a small, short-lived branch per change (for example `feature/add-search`, `fix/login-error`, `docs/update-readme`); open a PR to `main`; merge when review and CI checks are complete; then delete the branch. No long-lived `develop` branch needed for this tutorial.
 
 ## GitHub CLI (`gh`)
 | Command | What it does |

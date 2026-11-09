@@ -9,6 +9,18 @@
 - **Git** is a "save game" system for code. Every **commit** is a snapshot you can go back to.
 - **GitHub** is a website that stores your Git repositories online so teams can share and review code.
 
+## 🌿 Our simple branching strategy
+
+We'll use a beginner-friendly **short-lived branch** workflow:
+
+- Keep `main` stable: it should contain work that's been checked and is safe to share.
+- Start each small change from the latest `main` on its own branch.
+- Use a clear name with a type and a few words, such as `feature/add-search`, `fix/login-error`, or `docs/update-readme`.
+- Push the branch and open a pull request (PR) back to `main`. Review the change and wait for CI checks to pass before merging.
+- Delete the branch after merging; start a fresh branch for the next change.
+
+For this tutorial, you work on your own, so you can review your own PR. On a team, ask a teammate to review it. We are **not** using a separate long-lived `develop` branch or the full Git Flow model: one protected `main` and small PRs are enough to learn the core habit.
+
 ```
  working folder ──git add──► staging area ──git commit──► local history ──git push──► GitHub
    (your edits)              (what goes in the           (snapshots on              (shared copy)
@@ -137,10 +149,10 @@ That's exactly what we want. Your commit is still safe on your computer. Next yo
 ### 7. Branch → push → pull request → merge
 A **branch** is a parallel copy where you can work safely without breaking `main`. Move the commit you just made onto a new branch:
 ```bash
-git switch -c my-first-branch       # create a branch (it includes your new commit)
+git switch -c docs/first-notes      # short-lived branch (it includes your new commit)
 echo "- Branches keep main safe" >> NOTES.md
 git commit -am "Add a note about branches"
-git push -u origin my-first-branch  # ✅ pushing a branch is allowed
+git push -u origin docs/first-notes # ✅ pushing a branch is allowed
 ```
 Now open a **pull request (PR)**: a request to merge your branch into `main`. Do it from the VS Code terminal with GitHub CLI:
 ```bash
@@ -157,11 +169,13 @@ cat NOTES.md      # both new lines are now in main
 
 > 🔁 **From now on, every change follows the same 4 steps:**
 > ```bash
-> git switch -c NAME-OF-CHANGE                 # 1. branch
-> git commit -am "What and why"                # 2. commit (repeat as needed)
-> git push -u origin NAME-OF-CHANGE            # 3. push the branch
+> git switch main && git pull                   # start from the latest main
+> git switch -c TYPE/SHORT-DESCRIPTION          # 1. short-lived branch
+> git commit -am "What and why"                 # 2. commit (repeat as needed)
+> git push -u origin TYPE/SHORT-DESCRIPTION     # 3. push the branch
 > gh pr create --fill && gh pr merge --merge --delete-branch   # 4. PR + merge
 > ```
+> In a team, get a teammate to review the PR and confirm the required checks pass before merging.
 
 <details><summary>Prefer clicking? Do it on the website instead</summary>
 
@@ -190,8 +204,8 @@ git restore NOTES.md
 |---|---|
 | `Please tell me who you are` | Do step 1. More Git settings problems: [Git config troubleshooting](#-git-config-troubleshooting) |
 | `nothing to commit` | You haven't changed anything, or forgot to save the file (<kbd>Ctrl</kbd>+<kbd>S</kbd>) |
-| `GH013: Repository rule violations` / `Changes must be made through a pull request` | Your `main` is protected (step 6). Good! Move your work to a branch: `git switch -c my-fix`, `git push -u origin my-fix`, then `gh pr create --fill` |
-| After a rejected push, `main` says *ahead of 'origin/main' by 1 commit* | Your commit is only local. `git switch -c my-fix` takes it with you; then on `main` run `git switch main && git reset --hard origin/main` to clean up |
+| `GH013: Repository rule violations` / `Changes must be made through a pull request` | Your `main` is protected (step 6). Good! Move your work to a branch: `git switch -c fix/my-fix`, `git push -u origin fix/my-fix`, then `gh pr create --fill` |
+| After a rejected push, `main` says *ahead of 'origin/main' by 1 commit* | Your commit is only local. `git switch -c fix/my-fix` takes it with you; then on `main` run `git switch main && git reset --hard origin/main` to clean up |
 | No **Rules → Rulesets** in Settings | Use **Settings → Branches → Add classic branch protection rule**: pattern `main`, tick **Require a pull request before merging** and **Do not allow bypassing the above settings** |
 | `rejected… fetch first` | Someone (maybe you, on GitHub) changed `main`. Run `git pull`, then `git push` again |
 | `gh: command not found` | Codespaces: rebuild with **F1 → Codespaces: Rebuild Container**. Own PC: [Windows setup step 7](../docs/local-setup-windows.md#7-install-github-cli-and-sign-in) |

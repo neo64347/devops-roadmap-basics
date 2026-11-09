@@ -42,10 +42,10 @@ Your earlier work already ran it! On GitHub, open your repo → **Actions** tab 
 `main` is protected since Lab 2, so make a branch and a PR:
 ```bash
 git switch main && git pull
-git switch -c ci-practice
+git switch -c ci/practice
 echo "- CI runs on every pull request" >> NOTES.md
 git commit -am "Trigger CI"
-git push -u origin ci-practice
+git push -u origin ci/practice
 gh pr create --fill
 gh pr checks --watch      # live: 🟡 pending → ✅ pass (about 1 minute)
 ```
@@ -69,7 +69,7 @@ gh pr merge --merge --delete-branch
 ### 5. Break it on purpose 🔨
 New branch for a new change:
 ```bash
-git switch -c change-greeting
+git switch -c fix/change-greeting
 ```
 Change the app's greeting in `app/app.py`:
 ```python
@@ -82,7 +82,7 @@ greeting = os.getenv("GREETING", "Hi there!")
 Save, then:
 ```bash
 git commit -am "Change greeting"
-git push -u origin change-greeting
+git push -u origin fix/change-greeting
 gh pr create --fill
 gh pr checks --watch
 ```
@@ -111,7 +111,7 @@ gh pr merge --merge --delete-branch
 ### 7. Add a status badge to your README
 Same flow, as a quick practice:
 ```bash
-git switch -c ci-badge
+git switch -c docs/ci-badge
 ```
 Edit `README.md` and add this line at the top (replace `YOUR-USERNAME`):
 ```markdown
@@ -119,7 +119,7 @@ Edit `README.md` and add this line at the top (replace `YOUR-USERNAME`):
 ```
 ```bash
 git commit -am "Add CI badge"
-git push -u origin ci-badge
+git push -u origin docs/ci-badge
 gh pr create --fill && gh pr checks --watch && gh pr merge --merge --delete-branch
 ```
 Look at your repo's front page.

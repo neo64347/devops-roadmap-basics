@@ -38,7 +38,7 @@ Step-by-step walkthrough: [Lab 0: Setup](labs/00-setup.md).
 | 09:00 | [0. Setup & What is DevOps?](labs/00-setup.md) | Open your Codespace and learn the big picture |
 | 09:45 | [1. Linux terminal basics](labs/01-linux-basics.md) | Move around, create and read files |
 | 10:30 | ☕ Break | |
-| 10:45 | [2. Git & GitHub](labs/02-git-basics.md) | Track changes, commit and push |
+| 10:45 | [2. Git & GitHub](labs/02-git-basics.md) | Commit changes and use short-lived branches + pull requests |
 | 11:45 | [3. Docker basics](labs/03-docker-basics.md) | Run containers and build your own image |
 | 12:45 | 🍽️ Lunch | |
 | 13:30 | [4. Docker Compose](labs/04-docker-compose.md) | Run the app and a database together |
