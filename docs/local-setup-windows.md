@@ -46,13 +46,56 @@ You'll set up **WSL2 + Ubuntu + Docker Engine**: the lightest, free way to run D
    > ```
    > This lets your own local scripts run (downloaded scripts still need a signature) and only affects your user account.
 3. **Restart** the PC when asked.
-4. After restart an **Ubuntu** window opens (if not: Start → Ubuntu). Wait for it to finish, then create a Linux **username** and **password** (the password is invisible while typing, which is normal. Remember it, `sudo` asks for it).
+4. After restart an **Ubuntu** window opens (if not: **Start** → type `Ubuntu` → Enter). It says *Installing, this may take a few minutes…*. **Wait**, and don't close the window.
 
-✅ Check, in PowerShell:
+### 1b. Create your Linux user account 👤
+When installing finishes, Ubuntu asks you to create **your own Linux account**. It's separate from your Windows login.
+```
+Enter new UNIX username: juan
+New password:
+Retype new password:
+passwd: password updated successfully
+Installation successful!
+juan@LAPTOP-1234:~$
+```
+
+| Rule | Example |
+|---|---|
+| **Username:** lowercase letters, numbers, `-` or `_`; starts with a letter; **no spaces, no capitals** | ✅ `juan`, `juan_dc`, `jdelacruz` · ❌ `Juan`, `juan dela cruz`, `1juan` |
+| **Password:** anything you'll remember | It's **invisible while you type** (no dots or stars). That's normal: just type it and press Enter |
+
+> 🔑 **Remember this password.** `sudo` (run as administrator) asks for it all day. Write it down somewhere safe.
+
+✅ Check your account:
+```bash
+whoami          # your username (NOT root)
+sudo -v         # asks for your password; no error = you're an admin in Ubuntu
+```
+Prompt shows `root@…` or `whoami` says `root`? You skipped the account step. See [WSL troubleshooting](#-wsl-troubleshooting) → *Ubuntu logs in as root*.
+
+✅ Check WSL, in **PowerShell**:
 ```powershell
 wsl -l -v
 ```
-Ubuntu should show **VERSION 2**. If it shows 1: `wsl --set-version Ubuntu 2`.
+Ubuntu should show **VERSION 2** and is usually marked with `*` (the default). If it shows 1: `wsl --set-version Ubuntu 2`.
+
+### 1c. Start, stop and manage WSL 🐧
+| I want to… | Do this |
+|---|---|
+| **Open Ubuntu** | **Start** → `Ubuntu`, or in PowerShell / Windows Terminal: `wsl` |
+| Open Ubuntu in your home folder | `wsl ~` |
+| Open a specific distro | `wsl -d Ubuntu` |
+| Open Ubuntu from VS Code | VS Code → <kbd>F1</kbd> → **WSL: Connect to WSL** (bottom-left shows **WSL: Ubuntu**) |
+| See installed distros and if they're running | `wsl -l -v` |
+| Check WSL's version and settings | `wsl --status` and `wsl --version` |
+| **Stop everything** (frees RAM, fixes most glitches) | `wsl --shutdown` |
+| Stop only Ubuntu | `wsl -t Ubuntu` |
+| Make Ubuntu the default for `wsl` | `wsl --set-default Ubuntu` |
+| Update WSL itself | `wsl --update` |
+| Open your Linux folder in Windows Explorer | In Ubuntu: `explorer.exe .`, or in Explorer: `\\wsl.localhost\Ubuntu\home\YOUR-USERNAME` |
+| See your Windows `C:` drive from Ubuntu | `cd /mnt/c/Users/` (slow for projects; keep projects in `~`) |
+
+> WSL starts **automatically** when you open Ubuntu or run `wsl`, and stops itself a few seconds after you close the last Ubuntu window (unless VS Code or Docker keeps it busy). All commands in the table run in **PowerShell**, except the ones that say "in Ubuntu".
 
 > From now on, every command goes in the **Ubuntu** terminal, unless it says PowerShell.
 
@@ -349,13 +392,50 @@ It shows the list and asks **Install them? [y/N]**. Type `y`. Each extension is 
 
 ---
 
+## 🐧 WSL troubleshooting
+First try the universal fix: in **PowerShell** run `wsl --shutdown`, wait 10 seconds, open Ubuntu again. Still broken? Find your problem:
+
+### Installing and starting
+| Problem / error | Fix (in **PowerShell as administrator** unless it says otherwise) |
+|---|---|
+| `wsl` is not recognized / `wsl --install` shows only help text | Windows is too old. Update Windows (**Settings → Windows Update**) to Windows 10 22H2 or Windows 11, then try again |
+| `0x80370102` *The virtual machine could not be started because a required feature is not installed* | Virtualization is off. Turn on **Intel VT-x / AMD-V (SVM)** in the BIOS/UEFI, and in **Turn Windows features on or off** tick ✅ *Virtual Machine Platform*. Restart |
+| `0x8007019e` *The Windows Subsystem for Linux optional component is not enabled* | Tick ✅ *Windows Subsystem for Linux* and ✅ *Virtual Machine Platform* in **Turn Windows features on or off** (or run `wsl --install` again), then restart |
+| `0x800701bc` *WSL 2 requires an update to its kernel component* | `wsl --update`, then `wsl --shutdown` and reopen Ubuntu |
+| *The Windows Subsystem for Linux has no installed distributions* | `wsl --install -d Ubuntu` (see the list with `wsl -l --online`) |
+| Stuck on *Installing, this may take a few minutes…* for 15+ min | Restart the PC and open Ubuntu again. Still stuck: `wsl --unregister Ubuntu` ⚠️ (**deletes Ubuntu and all files in it**; fine on a fresh install), then `wsl --install -d Ubuntu` |
+| Ubuntu window opens and **closes immediately** | `wsl --shutdown`, then `wsl --update`. Check `wsl -l -v`: if Ubuntu shows VERSION 1, run `wsl --set-version Ubuntu 2` |
+| *The Windows Subsystem for Linux instance has terminated* | `wsl --shutdown` and reopen. Often caused by the PC sleeping or low memory |
+| `wsl` opens **docker-desktop** instead of Ubuntu | `wsl --set-default Ubuntu` |
+| *This app has been blocked by your system administrator* / company laptop | WSL is disabled by your organisation's policy. Use **GitHub Codespaces** (what the seminar uses) instead |
+
+### User account and password
+| Problem | Fix |
+|---|---|
+| *Please enter a username matching the regular expression…* / username rejected | Use only **lowercase** letters, numbers, `-` or `_`, starting with a letter. No spaces or capitals (e.g. `juan_dc`) |
+| Typed the password but **nothing appears** | Normal! Linux hides passwords completely. Type it and press Enter |
+| *Sorry, try again* / `sudo` rejects your password | Caps Lock? Keyboard layout? If you really forgot it, see the next row |
+| **Forgot your Linux password** | In PowerShell: `wsl -d Ubuntu -u root`, then (now in Ubuntu as root) `passwd YOUR-USERNAME`, set a new one, `exit` |
+| **Ubuntu logs in as `root`** (prompt `root@…`, `whoami` says `root`) | The account step was skipped. Create it now (in Ubuntu, as root): `adduser YOUR-USERNAME`, then `usermod -aG sudo YOUR-USERNAME`. Make it the default: `printf '[user]\ndefault=YOUR-USERNAME\n' >> /etc/wsl.conf`. Then in PowerShell: `wsl --shutdown`, reopen Ubuntu, check `whoami` |
+| Want a **different username** | Easiest: create the new one as in the previous row (`adduser` + `usermod -aG sudo` + `/etc/wsl.conf` default), then `wsl --shutdown`. Your old user's files stay in `/home/OLD-NAME` |
+| `YOUR-USERNAME is not in the sudoers file` | In PowerShell: `wsl -d Ubuntu -u root`, then `usermod -aG sudo YOUR-USERNAME`, `exit`, `wsl --shutdown`, reopen |
+| `whoami` is right but the **prompt still says root** after editing `/etc/wsl.conf` | WSL only reads it at start: `wsl --shutdown` in PowerShell, then reopen Ubuntu |
+
+### Network, time and files
+| Problem | Fix |
+|---|---|
+| `apt update` / `curl` / `git clone` fail: *Temporary failure in name resolution* (often on **VPN** or office Wi-Fi) | Windows 11: create `C:\Users\<you>\.wslconfig` with `[wsl2]` and `dnsTunneling=true` on the next line (or `networkingMode=mirrored`), then `wsl --shutdown`. Still failing: disconnect the VPN and try again |
+| `apt update`: *Release file … is not valid yet* | Ubuntu's clock is wrong (after sleep). `wsl --shutdown` and reopen Ubuntu |
+| Can't find my files from Windows | In Ubuntu: `explorer.exe .` opens the current folder in Explorer |
+| Everything is **very slow** in the project | Your project is under `/mnt/c/…`. Move it into Ubuntu: `cd ~` and clone it there |
+| Laptop runs out of memory | Limit WSL: `C:\Users\<you>\.wslconfig` with `[wsl2]` and `memory=4GB`, then `wsl --shutdown` |
+
 ## 🆘 Troubleshooting
 
 | Problem | Fix |
 |---|---|
-| `wsl --install` says virtualization is not enabled | Enable Intel VT-x / AMD-V in BIOS. Also check **Turn Windows features on or off** → ✅ *Virtual Machine Platform* and ✅ *Windows Subsystem for Linux* |
+| Any WSL install, start, user account or network problem | See [WSL troubleshooting](#-wsl-troubleshooting) above |
 | PowerShell: `...profile.ps1 cannot be loaded because running scripts is disabled` | Harmless, keep going. To fix it: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer **Y**, reopen PowerShell |
-| Error `0x80370102` | Same as above: virtualization is off in BIOS |
 | `permission denied ... docker.sock` | You skipped reopening Ubuntu after `usermod`. Close and reopen it (or run `newgrp docker`) |
 | `error: externally-managed-environment` on pip | The venv isn't on. Run `source .venv/bin/activate` (step 9), then install again |
 | `python: command not found` | Run `sudo apt install -y python-is-python3`, or type `python3` instead |
