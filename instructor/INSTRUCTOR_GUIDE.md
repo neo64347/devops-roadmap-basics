@@ -12,7 +12,7 @@ Audience: total beginners on Windows lab PCs, possibly **without admin rights**.
 ### The day before
 - [ ] Dry run every lab yourself in a **fresh** Codespace from the template, timing each one.
 - [ ] Pre-check Docker Hub pulls work from a Codespace (`docker pull nginx:alpine`).
-- [ ] Test the [backup plan](#-backup-plan-killercoda-browser-playground) in a Killercoda playground (sign-in, `docker --version`, `bash scripts/start.sh`) and put the steps on a slide.
+- [ ] Test the [backup plan](#-backup-plan-iximiuz-labs-docker-playground) in an iximiuz Docker playground (sign-in, `docker --version`, `bash scripts/start.sh`, open port 8000) and put the steps on a slide.
 - [ ] Print or share the [cheat sheet](../docs/cheatsheet.md).
 
 ### On the day
@@ -40,30 +40,31 @@ Audience: total beginners on Windows lab PCs, possibly **without admin rights**.
 ## 💰 Codespaces cost
 Personal GitHub accounts include a **free monthly Codespaces allowance** (GitHub currently lists it in core-hours. Check <https://docs.github.com/billing/managing-billing-for-github-codespaces/about-billing-for-github-codespaces> for current numbers). This repo requests a 2-core machine, so one seminar day uses only a small part of the allowance. Remind students to **stop** their Codespace at the end.
 
-## 🛟 Backup plan: Killercoda browser playground
-If Codespaces is blocked or unavailable for some students, use a free Linux playground in the browser.
+## 🛟 Backup plan: iximiuz Labs Docker playground
+If Codespaces is blocked or unavailable for some students, use a free Linux server with Docker in the browser. ✅ Tested and working (Nov 2026).
 
 > ⚠️ **Play with Docker (labs.play-with-docker.com) is shut down.** Its site says it is *"unavailable starting March 1, 2026"*. Don't put it on your slides.
 
-1. Go to <https://killercoda.com/playgrounds/scenario/ubuntu> and sign in (free; GitHub or Google login works).
-2. A terminal opens. Check Docker, and install it if the playground doesn't have it:
+1. Go to <https://labs.iximiuz.com/playgrounds/docker> and sign in (free account; GitHub login works). Click **Start**.
+2. A terminal opens on a Linux server with **Docker preinstalled**. Check it:
    ```bash
-   docker --version || curl -fsSL https://get.docker.com | sh
+   docker --version
    docker compose version
    ```
+   If `docker compose` is missing: `curl -fsSL https://get.docker.com | sh`.
 3. Get the labs (public repo, so no login needed to clone):
    ```bash
    git clone https://github.com/YOUR-USERNAME/devops-roadmap-basics.git
    cd devops-roadmap-basics
    bash scripts/start.sh
    ```
-4. Open ports with Killercoda's **Traffic / Ports** menu (top right): type `8000`, `3000` or `9090`. `curl localhost:8000` works in the terminal.
+4. Open the ports from the playground's **port / expose** menu: enter `8000`, `3000` or `9090` to get a browser link. `curl localhost:8000` works in the terminal.
 
 **What works there:** Labs 1, 3, 4 and 6 (monitoring) fully. Lab 2 works for local commits; to push, students need `gh auth login` (install `gh` as in the [Windows guide, step 7](../docs/local-setup-windows.md#7-install-github-cli-and-sign-in)), or they skip the push steps. Lab 5 can be done on github.com only (edit files in the browser with the ✏️ button; Actions still runs). Terraform isn't preinstalled, so demo Lab 6 Part A from your screen.
 
-**Limits:** free sessions are time-limited (around 1 hour at the time of writing) and are wiped when they end. Check the current limit on the site the day before. Students should **push their work before the timer ends**, then start a new playground and `git clone` again.
+**Limits:** free playground time is limited and the server is wiped when the session ends. Check the current limit on the site the day before. Students should **push their work before the timer ends**, then start a new playground and `git clone` again.
 
-**Second option:** [iximiuz Labs Docker playground](https://labs.iximiuz.com/playgrounds/docker): a Linux server with Docker preinstalled, free account, also time-limited.
+**Second option:** [Killercoda Ubuntu playground](https://killercoda.com/playgrounds/scenario/ubuntu): free, time-limited. Check Docker first with `docker --version || curl -fsSL https://get.docker.com | sh`.
 
 **Last resort:** pair students without a working environment with a neighbour who has one, and swap the driver role each lab.
 

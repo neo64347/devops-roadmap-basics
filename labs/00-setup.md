@@ -60,7 +60,7 @@ terraform --version
 | No **Use this template** button | Make sure you're signed in to GitHub |
 | Codespace stuck on "Setting up" for 5+ minutes | Refresh the page. Still stuck? Go to <https://github.com/codespaces>, delete it, and create a new one |
 | `docker: command not found` | Wait a minute (it may still be installing), then open a new terminal |
-| Codespaces not available for your account | Ask the instructor for the backup: a free [Killercoda](https://killercoda.com/playgrounds/scenario/ubuntu) Linux playground in the browser ([steps](../instructor/INSTRUCTOR_GUIDE.md#-backup-plan-killercoda-browser-playground)) |
+| Codespaces not available for your account | Ask the instructor for the backup: a free [iximiuz Labs Docker playground](https://labs.iximiuz.com/playgrounds/docker) in the browser ([steps](../instructor/INSTRUCTOR_GUIDE.md#-backup-plan-iximiuz-labs-docker-playground)) |
 
 ## 💰 Is Codespaces free?
 Personal GitHub accounts get a **free monthly allowance** of Codespaces hours, far more than one day needs. To save hours, **stop** your Codespace when you finish: <https://github.com/codespaces> → **⋯** → **Stop codespace**. It also stops by itself after 30 minutes of inactivity.

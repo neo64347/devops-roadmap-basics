@@ -383,6 +383,6 @@ It shows the list and asks **Install them? [y/N]**. Type `y`. Each extension is 
 |---|---|
 | **Rancher Desktop** (<https://rancherdesktop.io>, free) | You prefer a GUI app. On first start choose **dockerd (moby)** and turn **off** Kubernetes to save memory. It uses WSL2 too, so step 0 still applies |
 | **Docker Desktop** | Most tutorials assume it. Free for personal/education/small business, heavier, needs admin |
-| **No admin rights** | Use the browser: **GitHub Codespaces** (what the seminar uses), or a free **Killercoda** Ubuntu playground (<https://killercoda.com/playgrounds/scenario/ubuntu>, time-limited sessions). *Play with Docker was shut down in March 2026.* |
+| **No admin rights** | Use the browser: **GitHub Codespaces** (what the seminar uses), or a free **iximiuz Labs Docker playground** (<https://labs.iximiuz.com/playgrounds/docker>, Docker preinstalled, time-limited sessions). *Play with Docker was shut down in March 2026.* |
 
 > **Why not Colima?** Colima only runs on **macOS and Linux**. WSL2 + Docker Engine is the Windows equivalent.
