@@ -55,6 +55,7 @@ Sessions last 4 hours, so start a new instance after lunch.
 ## 🖥️ Your own demo machine
 - **Mac:** Colima works well (`colima start --cpu 2 --memory 4`). Note macOS uses port 5000 for AirPlay, which is why the app uses **8000**.
 - **Windows:** see [local setup](../docs/local-setup-windows.md) (WSL2 + Docker Engine).
+- **Sharing your VS Code extensions:** on your Mac run `scripts/vscode/export-from-mac.sh`. It reads your installed extensions, keeps only the ones with a Windows build on the Marketplace, skips AI assistants and account-based tools (Claude, Cursor, OpenAI, Copilot, Codacy), and rewrites `scripts/vscode/extensions.txt`. Review the diff, commit and push. Students install them with step 12 of the Windows guide.
 
 ## ✅ Answer key: common questions
 - **"Is Docker a virtual machine?"** No. Containers share the host's kernel, so they're much lighter and faster to start.

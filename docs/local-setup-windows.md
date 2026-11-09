@@ -28,6 +28,7 @@ You'll set up **WSL2 + Ubuntu + Docker Engine**: the lightest, free way to run D
 | 5 | VS Code + WSL extension | Windows | Editor and terminal |
 | 6 | GitHub CLI (`gh`) | Ubuntu | Sign in to GitHub, push, create repos and pull requests from the terminal |
 | 7 | Zsh + Oh My Zsh *(optional)* | Ubuntu | A friendlier terminal: Git branch in the prompt, suggestions, highlighting |
+| 8 | Instructor's VS Code extensions *(optional)* | Windows + Ubuntu | Same editor setup as the instructor, one script |
 
 ⏱️ About **30–45 minutes**, mostly downloads.
 
@@ -273,6 +274,23 @@ gh repo view      # quick look at the repo's README in the terminal
 >
 > **Undo:** `chsh -s $(which bash)`, then in VS Code choose **bash** as the default profile again.
 
+
+## 12. ⭐ Optional: install the instructor's VS Code extensions
+Want the same VS Code setup as the instructor? [`scripts/vscode/extensions.txt`](../scripts/vscode/extensions.txt) lists the extensions I use daily that also work on Windows: Docker, Kubernetes, Terraform, Python, GitHub Actions, GitLens, YAML, AWS Toolkit, Grafana, Prometheus and a spell checker. AI assistants and account-based tools are not included.
+
+In the **VS Code terminal** (bottom-left says **WSL: Ubuntu**), inside the labs folder:
+```bash
+cd ~/devops-roadmap-basics
+bash scripts/vscode/install.sh
+```
+It shows the list and asks **Install them? [y/N]**. Type `y`. Each extension is installed on the Windows side and the Ubuntu side, so VS Code uses the right one. It takes about **3–5 minutes**. Then reload: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → **Developer: Reload Window**.
+
+> Only want some? Open the Extensions panel (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>) and install them one by one, or delete lines from `extensions.txt` before running the script.
+>
+> **Low on disk or RAM?** Skip this step. The labs only need the extensions VS Code suggests automatically.
+>
+> **C# Dev Kit** is free for students, individuals and open source; companies need a Visual Studio licence.
+
 ---
 
 ## 🆘 Troubleshooting
@@ -294,6 +312,8 @@ gh repo view      # quick look at the repo's README in the terminal
 | Prompt shows `?` boxes or broken arrows | You chose a theme that needs a Nerd Font. Set `ZSH_THEME="robbyrussell"` in `~/.zshrc` and run `source ~/.zshrc` |
 | `gh repo clone` says *To get started with GitHub CLI, please run: gh auth login* | Sign in first: `gh auth login`, then clone again |
 | `git pull` asks for a username/password in Zsh | Run `gh auth setup-git` |
+| `install.sh` says `'code' not found` | Run it in the **VS Code terminal**, not a plain Ubuntu window. Open VS Code from Ubuntu with `code .` first |
+| `install.sh`: some extensions ❌ | Run the script again (network hiccup), or install those from the Extensions panel |
 | Command worked in bash but not in Zsh | Wrap URLs or arguments with `?`, `*` or `[ ]` in quotes, e.g. `curl "http://localhost:8000/?x=1"` |
 | `localhost:8000` doesn't open in the Windows browser | Run `wsl --shutdown` in PowerShell, reopen Ubuntu, start the containers again |
 | WSL uses too much memory | Create `C:\Users\<you>\.wslconfig` with `[wsl2]` and `memory=4GB` on the next line, then `wsl --shutdown` |
