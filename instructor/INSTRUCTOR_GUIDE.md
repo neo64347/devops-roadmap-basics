@@ -29,7 +29,7 @@ Audience: total beginners on Windows lab PCs, possibly **without admin rights**.
 | 10:45 | 2 Git | Draw *working → staging → commit → push* | `git commit` without `-m` opens an editor (`:wq`) |
 | 11:45 | 3 Docker | Image = recipe, container = the cake 🎂 | Port pop-ups; leftover containers holding ports |
 | 13:30 | 4 Compose | Services talk by name; data lives in Redis | Lab 3 container still on port 8000 → `docker rm -f my-app` |
-| 14:15 | 💬 Discussion (30 min, no hands-on) | Show the 5 diagrams. VM = house, container = apartment; Kubernetes = robot keeping "3 copies" alive; monolith vs microservices = kitchen vs food court; API = the kitchen's order window. Optional 1-min demo: `curl localhost:8000/` vs `curl localhost:8000/health` | Don't let it turn into a Kubernetes tutorial. Park deep questions for the [roadmap](../docs/roadmap.md). Stress "start simple" |
+| 14:15 | 💬 Discussion (30 min, no hands-on) | Show the 5 diagrams. VM = house, container = apartment; Kubernetes = robot keeping "3 copies" alive; monolith vs microservices = kitchen vs food court; API = the kitchen's order window. Status codes: "4xx = you asked wrong, 5xx = we broke" (restaurant analogy). Optional 1-min demo: `curl -i` on `/`, `/health`, `/nope` (404) | Don't let it turn into a Kubernetes tutorial. Park deep questions for the [roadmap](../docs/roadmap.md). Stress "start simple" |
 | 14:45 | 5 CI/CD | Show the red ❌ run on the projector, then fix it together | First run may need "enable workflows" in the Actions tab |
 | 16:00 | 6 Cloud/IaC/Monitoring | Pizza-as-a-service; plan/apply/destroy; "monitoring = smoke alarm" | Grafana "No data" until traffic is generated |
 | 17:00 | 7 Wrap-up | Quiz, roadmap, **stop Codespaces** | |

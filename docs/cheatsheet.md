@@ -62,6 +62,18 @@
 | `pip list` / `pip show flask` | Installed packages / details of one |
 | `python -m pytest -q` | Run the tests |
 
+## HTTP status codes
+| Code | Meaning | Code | Meaning |
+|---|---|---|---|
+| `200` | OK ✅ | `404` | Not found |
+| `201` | Created | `405` | Method not allowed |
+| `301` / `302` | Redirect | `429` | Too many requests |
+| `400` | Bad request | `500` | Server error 🔥 |
+| `401` | Unauthorized (log in) | `502` / `504` | Bad gateway / timeout (app behind the load balancer is down or slow) |
+| `403` | Forbidden | `503` | Service unavailable |
+
+`curl -i URL` shows the status line · `curl -s -o /dev/null -w '%{http_code}\n' URL` prints only the code · **4xx** = the request is wrong · **5xx** = the server is broken
+
 ## Docker
 | Command | What it does |
 |---|---|

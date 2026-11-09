@@ -34,6 +34,8 @@ docker compose ps
 ```
 ✅ Both `web` and `redis` show as **running**, and `web` shows `0.0.0.0:8000->8000` under PORTS.
 
+> 🔢 **Peek at the status code:** `curl -i localhost:8000/health` shows `HTTP/1.1 200 OK` on the first line. Try `curl -i localhost:8000/nope` → `404 NOT FOUND`. More in the [discussion: HTTP status codes](04b-discussion-containers-kubernetes-architecture.md#4-http-status-codes).
+
 > 🔌 **Where do I open port 8000?** Codespaces: **PORTS** tab → 🌐 next to 8000 (`localhost` in your own browser won't work). Own PC: <http://localhost:8000>. More help: [Run the app and open the 3 ports](../docs/ports.md).
 
 ### 3. Use the app

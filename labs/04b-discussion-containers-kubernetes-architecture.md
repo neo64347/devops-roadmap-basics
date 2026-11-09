@@ -177,21 +177,60 @@ A modern product is often **both**: a web front end (React, Angular…) in the b
 |---|---|
 | **REST API** | The most common style: URLs for things (`/orders/42`) + HTTP methods |
 | **HTTP methods** | `GET` read · `POST` create · `PUT`/`PATCH` update · `DELETE` remove |
-| **Status codes** | `200` OK · `201` Created · `404` Not found · `401/403` Not allowed · `500` Server error |
+| **Status codes** | A 3-digit number on every response: `200` OK, `404` Not found, `500` Server error… [See below](#4-http-status-codes) |
 | **JSON** | The text format most APIs use: `{"status": "ok"}` |
 | **Endpoint** | One URL of an API, e.g. `/health` |
 | **API gateway** | The front door for many microservices (auth, rate limits, routing) |
 
-### 💬 Discuss (pairs, 3 min)
+### 4. HTTP status codes
+Every web response, to a browser or to a program, starts with a **3-digit status code**. The **first digit** tells you what happened and **whose fault** it is.
+
+![HTTP status codes: 1xx info, 2xx success, 3xx redirect, 4xx client error, 5xx server error, with examples from the seminar app](../docs/images/discussion/http-status-codes.png)
+
+| Family | Meaning | Common codes | Think of it as… |
+|---|---|---|---|
+| **1xx** | Information | `100` Continue, `101` Switching protocols | "Hold on…" (rarely seen) |
+| **2xx** ✅ | Success | `200` OK · `201` Created · `204` No content | "Here you go!" |
+| **3xx** ↪️ | Redirect | `301` Moved permanently · `302` Found (temporary) · `304` Not modified | "It's over there" |
+| **4xx** 🙋 | **Client** error: the request is wrong | `400` Bad request · `401` Unauthorized (log in) · `403` Forbidden · `404` Not found · `405` Method not allowed · `429` Too many requests | "**You** asked wrong": fix the request |
+| **5xx** 🔥 | **Server** error: the app or server failed | `500` Internal server error · `502` Bad gateway · `503` Service unavailable · `504` Gateway timeout | "**We** broke": Ops gets paged 🚨 |
+
+> 🍔 **Restaurant analogy:** `200` your food arrives · `301` "we moved to a new address" · `404` "that's not on the menu" · `401` "members only, show your card" · `429` "one order at a time, please" · `500` "the kitchen is on fire" · `503` "we're closed for cleaning".
+
+**Our seminar app returns real status codes** (tested):
+
+| Request | Status | Why |
+|---|---|---|
+| `GET /` | `200 OK` | Greeting text |
+| `GET /health` | `200 OK` | `{"status":"ok"}` |
+| `GET /nope` | `404 Not Found` | That page doesn't exist |
+| `POST /health` | `405 Method Not Allowed` | `/health` only accepts `GET` |
+
+**👀 Instructor demo (optional, 1 min):** show the status line on the projector:
+```bash
+curl -i localhost:8000/health                                   # first line: HTTP/1.1 200 OK
+curl -s -o /dev/null -w '%{http_code}\n' localhost:8000/nope    # 404
+curl -s -o /dev/null -w '%{http_code}\n' -X POST localhost:8000/health   # 405
+```
+
+**Why DevOps engineers care about status codes**
+- **Health checks:** Kubernetes and load balancers call `/health` and expect `200`. Anything else → restart the container or stop sending it traffic.
+- **CI/CD smoke tests:** `curl -f` exits with an error on a 4xx/5xx, so the pipeline fails. That's exactly how our [Lab 5 pipeline](05-ci-cd-github-actions.md) checks `/health`.
+- **Monitoring & alerts:** a few `404`s are normal; a rise in **`5xx`** means users are hitting errors → alert.
+- **`502` / `503` / `504`** usually come from the **load balancer or gateway in front of your app**: the app behind it is down (`502`/`503`) or too slow (`504`). Look at the app, not the load balancer.
+
+### 💬 Discuss (pairs, 4 min)
 1. A start-up with 3 developers is building its first product. Monolith or microservices?
 2. Is `localhost:8000/health` part of a web app or an API? How can you tell?
 3. Why does each microservice usually need its own CI/CD pipeline and monitoring?
+4. Your monitoring shows many `503` errors, but no `404`s. Is the problem in the users' requests or in your app? What do you check first?
 
 <details><summary>Possible answers</summary>
 
 1. Usually a monolith: faster to build and change. Split later if needed.
 2. An API: it returns JSON for programs, not a page for people.
 3. Each one is built and deployed separately, and with many services you need monitoring to see which one is failing.
+4. In your app or servers: `5xx` means the server side failed (`503` = service unavailable). Check whether the app's containers are running and healthy (`docker compose ps`, logs, `/health`).
 </details>
 
 ---
