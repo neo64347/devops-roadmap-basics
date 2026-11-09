@@ -5,7 +5,7 @@ name: Lab stack (ports 8000/3000/9090)
 on:
   push:
     branches: [main]
-    paths: [compose.yaml, app/**, monitoring/**, scripts/start.sh, .github/workflows/stack.yml]
+    paths: [compose.yaml, app/**, monitoring/**, scripts/start.sh, scripts/cleanup.sh, .github/workflows/stack.yml]
   workflow_dispatch:
 
 jobs:
@@ -28,6 +28,8 @@ jobs:
       - name: Logs on failure
         if: failure()
         run: docker compose --profile monitoring logs
-      - name: Stop
+      - name: Clean up (end-of-session script)
         if: always()
-        run: bash scripts/start.sh stop
+        run: |
+          bash scripts/cleanup.sh
+          test -z "$(docker compose --profile monitoring ps -q)"

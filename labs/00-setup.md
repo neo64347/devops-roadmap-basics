@@ -109,6 +109,6 @@ terraform --version
 | Codespaces not available for your account | Ask the instructor for the backup: a free [iximiuz Labs Docker playground](https://labs.iximiuz.com/playgrounds/docker) in the browser ([steps](../instructor/INSTRUCTOR_GUIDE.md#-backup-plan-iximiuz-labs-docker-playground)) |
 
 ## 💰 Is Codespaces free?
-Personal GitHub accounts get a **free monthly allowance** of Codespaces hours, far more than one day needs. To save hours, **stop** your Codespace when you finish: <https://github.com/codespaces> → **⋯** → **Stop codespace**. It also stops by itself after 30 minutes of inactivity.
+Personal GitHub accounts get a **free monthly allowance** of Codespaces hours, far more than one day needs. To save hours, **stop** your Codespace when you finish: <https://github.com/codespaces> → **⋯** → **Stop codespace**. It also stops by itself after 30 minutes of inactivity (change this under <https://github.com/settings/codespaces> → **Default idle timeout**). When a Codespace stops, every Docker container inside it stops too, and the lab containers are set **not to restart** by themselves. At the end of the day, [Lab 7](07-wrap-up.md#-before-you-leave) shows how to clean everything up with `bash scripts/cleanup.sh`.
 
 ➡️ Next: [Lab 1: Linux terminal basics](01-linux-basics.md)

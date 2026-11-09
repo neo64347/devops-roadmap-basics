@@ -145,7 +145,7 @@ In real projects, one more job would **push the image to a registry** and **depl
 |---|---|
 | No runs in the Actions tab | Click **Actions** → enable workflows if GitHub asks ("I understand my workflows…") |
 | `ModuleNotFoundError` when running pytest | Run it from inside the `app` folder: `cd app && pytest -v` |
-| `gh pr checks` says *no checks reported* | The run hasn't started yet. Wait 10 seconds and run `gh pr checks --watch` again |
+| `gh pr checks` says *no checks reported* | The run hasn't started yet. GitHub can take **up to 1–2 minutes** to start CI on a new PR. Wait, then run `gh pr checks --watch` again |
 | `GH013` / push to `main` rejected | `main` is protected (Lab 2). Push a branch and open a PR instead |
 | Can't find **Run tests** under *Add checks* | The checks must have run at least once: finish step 3 first, wait for ✅, then add them |
 | PR stuck on *Expected — Waiting for status to be reported* | The check name doesn't match exactly. Remove it and re-add it from the list (don't type a new name) |

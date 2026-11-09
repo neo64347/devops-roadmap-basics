@@ -234,7 +234,7 @@ Start all three ports and get the links:
 ```bash
 bash scripts/start.sh
 ```
-<http://localhost:8000> (web app), <http://localhost:3000> (Grafana) and <http://localhost:9090> (Prometheus) open in your normal **Windows** browser. Stop with `bash scripts/start.sh stop`. Problems? See [Run the app and open the 3 ports](ports.md).
+<http://localhost:8000> (web app), <http://localhost:3000> (Grafana) and <http://localhost:9090> (Prometheus) open in your normal **Windows** browser. Stop with `bash scripts/start.sh stop`. At the end of the day, `bash scripts/cleanup.sh` removes **all** lab containers (add `--all` to also free the disk space). Shutting down Windows or running `wsl --shutdown` stops them as well, and they won't restart by themselves. Problems? See [Run the app and open the 3 ports](ports.md).
 
 You're ready. Start at [Lab 1](../labs/01-linux-basics.md) (skip the Codespaces part of Lab 0).
 
