@@ -2,8 +2,9 @@
 
 ## 🎯 Goals
 - Understand **CI** (Continuous Integration) and **CD** (Continuous Delivery/Deployment)
-- Watch a pipeline run automatically on every push
-- **Break** the build on purpose, see it go red ❌, then fix it ✅
+- Watch a pipeline run automatically on every push and pull request
+- Make CI a **required check**, so a red ❌ pull request **cannot be merged**
+- **Break** the build on purpose, see it blocked, then fix it ✅
 
 ## 💡 The idea
 Imagine 10 developers changing the same app every day. Who checks that nothing broke? A **robot**.
@@ -12,9 +13,9 @@ Imagine 10 developers changing the same app every day. Who checks that nothing b
 - **CD:** if everything passes, automatically **release/deploy** it.
 
 ```
- git push ──► GitHub Actions ──► [ Run tests ] ──pass──► [ Build Docker image + smoke test ] ──► ✅
-                                       │
-                                     fail ──► ❌ stop, tell the developer
+ branch + PR ──► GitHub Actions ──► [ Run tests ] ──pass──► [ Build Docker image + smoke test ] ──► ✅ Merge allowed
+                                        │
+                                      fail ──► ❌ Merge blocked, tell the developer
 ```
 
 ## 🛠️ Steps
@@ -35,24 +36,41 @@ cat .github/workflows/ci.yml
 - `jobs:` **what** runs: `test`, then `build` (`needs: test` means build only runs if tests pass)
 - `steps:` the commands, the same kind you typed in Lab 3 and in step 1 above
 
-### 3. Trigger it
-Your earlier pushes already ran it! On GitHub, open your repo → **Actions** tab. Click the latest run and watch the jobs and their logs.
+### 3. Trigger it with a pull request
+Your earlier work already ran it! On GitHub, open your repo → **Actions** tab and click the latest run.
 
-Push something new to trigger a fresh run:
+`main` is protected since Lab 2, so make a branch and a PR:
 ```bash
-echo "- CI runs on every push" >> NOTES.md
+git switch main && git pull
+git switch -c ci-practice
+echo "- CI runs on every pull request" >> NOTES.md
 git commit -am "Trigger CI"
-git push
+git push -u origin ci-practice
+gh pr create --fill
+gh pr checks --watch      # live: 🟡 pending → ✅ pass (about 1 minute)
 ```
-Go to **Actions** and watch it go 🟡 → ✅ (about 1 minute).
+Open the PR in the browser (`gh pr view --web`): at the bottom you'll see the two checks, **Run tests** and **Build and smoke-test Docker image**, with green ticks.
 
-> 💡 **Or watch it from the VS Code terminal** with GitHub CLI:
-> ```bash
-> gh run watch      # pick the latest run; it updates live until it finishes
-> gh run list       # recent runs with ✓ or X
-> ```
+> 💡 Other ways to watch: the **Actions** tab, or `gh run watch` / `gh run list` in the terminal.
 
-### 4. Break it on purpose 🔨
+Don't merge yet. First, make the checks **required**.
+
+### 4. Make CI a required check 🔒
+Right now a PR could still be merged even if the tests fail. Let's stop that. On GitHub: **Settings → Rules → Rulesets → Protect main** (from Lab 2):
+1. Tick ✅ **Require status checks to pass**.
+2. Click **Add checks**, type and select **Run tests**, then **Build and smoke-test Docker image** (they appear because they've already run).
+3. Click **Save changes**.
+
+Now merge the PR. Its checks are green, so it's allowed:
+```bash
+gh pr merge --merge --delete-branch
+```
+
+### 5. Break it on purpose 🔨
+New branch for a new change:
+```bash
+git switch -c change-greeting
+```
 Change the app's greeting in `app/app.py`:
 ```python
 greeting = os.getenv("GREETING", "Hello, DevOps!")
@@ -64,36 +82,56 @@ greeting = os.getenv("GREETING", "Hi there!")
 Save, then:
 ```bash
 git commit -am "Change greeting"
-git push
+git push -u origin change-greeting
+gh pr create --fill
+gh pr checks --watch
 ```
-In **Actions**, the **Run tests** job turns ❌ red. Click it and read the error: `test_home_says_hello` expected `Hello, DevOps!`. Notice that the **Build** job **never ran**. The pipeline protected us from shipping a change nobody checked.
+❌ **Run tests** fails. Read the error (`gh pr checks` → click the link, or the **Actions** tab): `test_home_says_hello` expected `Hello, DevOps!`. Notice that **Build** never ran.
 
-### 5. Fix it
-Either change the greeting back, **or** update the test to match the new behaviour in `app/tests/test_app.py`:
+Now try to merge anyway:
+```bash
+gh pr merge --merge
+```
+🚫 GitHub refuses: the required check **Run tests** didn't pass. On the PR page the button says **Merging is blocked**. **The pipeline just protected `main` from a change nobody checked.** That's CI's whole job.
+
+### 6. Fix it
+On the same branch, either change the greeting back, **or** update the test to match the new behaviour in `app/tests/test_app.py`:
 ```python
     assert b"Hi there!" in response.data
 ```
-Run `cd app && pytest -v && cd ..` locally first, then:
+Run `cd app && pytest -v && cd ..` locally first, then push to the **same branch**. The PR updates by itself:
 ```bash
 git commit -am "Update test for new greeting"
 git push
+gh pr checks --watch      # ✅ both green
+gh pr merge --merge --delete-branch
 ```
-✅ Back to green.
+✅ Merged into `main`, safely.
 
-### 6. Add a status badge to your README
+### 7. Add a status badge to your README
+Same flow, as a quick practice:
+```bash
+git switch -c ci-badge
+```
 Edit `README.md` and add this line at the top (replace `YOUR-USERNAME`):
 ```markdown
 ![CI](https://github.com/YOUR-USERNAME/devops-roadmap-basics/actions/workflows/ci.yml/badge.svg)
 ```
-Commit and push, then look at your repo's front page.
+```bash
+git commit -am "Add CI badge"
+git push -u origin ci-badge
+gh pr create --fill && gh pr checks --watch && gh pr merge --merge --delete-branch
+```
+Look at your repo's front page.
 
 ## ✅ Checkpoint
 - [ ] You saw a green ✅ run and a red ❌ run
+- [ ] A PR with failing tests was **blocked** from merging
 - [ ] You can explain why **Build** didn't run when tests failed
 - [ ] Your README shows a CI badge
 
 ## 🏋️ Mini challenge
-Add a 4th test that checks `/health` returns `status` equal to `"ok"` using a different style, or tests a page that doesn't exist returns `404`:
+Using a branch and a PR, add a 4th test that checks `/health` returns `status` equal to `"ok"` using a different style, or tests a page that doesn't exist returns `404`:
 ```python
 def test_unknown_page_is_404():
     assert client().get("/nope").status_code == 404
@@ -107,6 +145,11 @@ In real projects, one more job would **push the image to a registry** and **depl
 |---|---|
 | No runs in the Actions tab | Click **Actions** → enable workflows if GitHub asks ("I understand my workflows…") |
 | `ModuleNotFoundError` when running pytest | Run it from inside the `app` folder: `cd app && pytest -v` |
-| Push rejected | `git pull`, then `git push` |
+| `gh pr checks` says *no checks reported* | The run hasn't started yet. Wait 10 seconds and run `gh pr checks --watch` again |
+| `GH013` / push to `main` rejected | `main` is protected (Lab 2). Push a branch and open a PR instead |
+| Can't find **Run tests** under *Add checks* | The checks must have run at least once: finish step 3 first, wait for ✅, then add them |
+| PR stuck on *Expected — Waiting for status to be reported* | The check name doesn't match exactly. Remove it and re-add it from the list (don't type a new name) |
+| `gh pr merge` says the base branch policy prohibits the merge | That's the protection working: fix the failing check first |
+| Push rejected on your branch | `git pull`, then `git push` |
 
 ➡️ Next: [Lab 6: Cloud, IaC & Monitoring](06-cloud-iac-monitoring.md)
