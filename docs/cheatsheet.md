@@ -14,6 +14,10 @@
 | `grep "word" file` | Find lines containing a word |
 | `code file` | Open a file in the editor |
 | <kbd>Tab</kbd> / <kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>Ctrl</kbd>+<kbd>L</kbd> | Autocomplete / stop / clear screen |
+| `echo $SHELL` | Which shell am I using? (`bash` or `zsh`) |
+| `source ~/.zshrc` | Reload Zsh settings after editing ([Zsh setup](local-setup-windows.md#11--optional-a-nicer-terminal-with-zsh-in-vs-code)) |
+| <kbd>→</kbd> (Zsh) | Accept the grey suggestion |
+| `gst` / `gco` / `gp` (Zsh) | Shortcuts for `git status` / `git checkout` / `git push` |
 
 ## Git
 | Command | What it does |

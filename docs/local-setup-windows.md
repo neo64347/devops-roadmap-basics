@@ -27,6 +27,7 @@ You'll set up **WSL2 + Ubuntu + Docker Engine**: the lightest, free way to run D
 | 4 | Terraform | Ubuntu | Lab 6 |
 | 5 | VS Code + WSL extension | Windows | Editor and terminal |
 | 6 | GitHub CLI (`gh`) | Ubuntu | Sign in to GitHub, push, create repos and pull requests from the terminal |
+| 7 | Zsh + Oh My Zsh *(optional)* | Ubuntu | A friendlier terminal: Git branch in the prompt, suggestions, highlighting |
 
 ⏱️ About **30–45 minutes**, mostly downloads.
 
@@ -180,6 +181,55 @@ Links like <http://localhost:8000>, <http://localhost:3000> (Grafana) and <http:
 
 You're ready. Start at [Lab 1](../labs/01-linux-basics.md) (skip the Codespaces part of Lab 0).
 
+## 11. ⭐ Optional: a nicer terminal with Zsh in VS Code
+**Zsh** is the shell most DevOps engineers use (it's the default on Mac). With **Oh My Zsh** you get a clean prompt that shows your Git branch, **grey suggestions** from your history (press <kbd>→</kbd> to accept), **green/red highlighting** for valid/invalid commands, and shortcuts for `git`, `gh`, `docker` and `terraform`. All lab commands work the same in Zsh.
+
+Do everything in the **VS Code terminal** (bottom-left says **WSL: Ubuntu**).
+
+> **Using Codespaces?** Zsh and Oh My Zsh are already installed there. In the terminal panel click the **˅** next to **+** → **zsh**.
+
+**1. Install Zsh**
+```bash
+sudo apt install -y zsh
+zsh --version
+```
+
+**2. Install Oh My Zsh**
+```bash
+RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+When it asks **"Do you want to change your default shell to zsh?"**, type `Y` and enter your Ubuntu password.
+
+**3. Add autosuggestions and syntax highlighting**
+```bash
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+sed -i 's/^plugins=(git)$/plugins=(git gh docker terraform zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
+grep '^plugins=' ~/.zshrc
+```
+✅ The last command prints `plugins=(git gh docker terraform zsh-autosuggestions zsh-syntax-highlighting)`.
+
+**4. Make Zsh the default terminal in VS Code**
+1. Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → type **Terminal: Select Default Profile** → choose **zsh**.
+2. Close all terminals (🗑️ icon in the terminal panel), then open a new one with <kbd>Ctrl</kbd>+<kbd>`</kbd>.
+
+✅ Your prompt now looks like `➜  devops-roadmap-basics git:(main)`. Check with:
+```bash
+echo $SHELL     # /usr/bin/zsh
+```
+
+**5. Try it**
+- Type `doc` and press <kbd>Tab</kbd>: Zsh completes `docker`. Press <kbd>Tab</kbd> twice after `docker ` to see sub-commands.
+- Start typing a command you used before: a grey suggestion appears. Press <kbd>→</kbd> to accept it.
+- Type a wrong command like `dokcer`: it turns **red** before you even press <kbd>Enter</kbd>.
+- Shortcuts from the plugins: `gst` = `git status`, `gco main` = `git checkout main`, `gp` = `git push`. Run `alias | grep git` to see them all.
+
+> **Your settings live in `~/.zshrc`**, not `~/.bashrc`. To change the theme, edit `ZSH_THEME="robbyrussell"` in `~/.zshrc` (try `"agnoster"` with a [Nerd Font](https://www.nerdfonts.com)), then run `source ~/.zshrc`.
+>
+> **Python venv:** `source .venv/bin/activate` works the same in Zsh.
+>
+> **Undo:** `chsh -s $(which bash)`, then in VS Code choose **bash** as the default profile again.
+
 ---
 
 ## 🆘 Troubleshooting
@@ -196,6 +246,10 @@ You're ready. Start at [Lab 1](../labs/01-linux-basics.md) (skip the Codespaces 
 | `gh auth login` doesn't open a browser | <kbd>Ctrl</kbd>+click the `https://github.com/login/device` link, or open it in your browser and paste the code |
 | `git push` asks for a username/password | Run `gh auth setup-git` (or `gh auth login` again and answer **Yes** to "Authenticate Git") |
 | `gh: command not found` | Rerun step 7, or open a new terminal |
+| VS Code terminal still opens **bash** after step 11 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → **Terminal: Select Default Profile** → **zsh**, then trash all terminals and open a new one |
+| Zsh shows `[oh-my-zsh] plugin 'zsh-autosuggestions' not found` | Step 11.3's `git clone` didn't finish. Run both `git clone` commands again |
+| Prompt shows `?` boxes or broken arrows | You chose a theme that needs a Nerd Font. Set `ZSH_THEME="robbyrussell"` in `~/.zshrc` and run `source ~/.zshrc` |
+| Command worked in bash but not in Zsh | Wrap URLs or arguments with `?`, `*` or `[ ]` in quotes, e.g. `curl "http://localhost:8000/?x=1"` |
 | `localhost:8000` doesn't open in the Windows browser | Run `wsl --shutdown` in PowerShell, reopen Ubuntu, start the containers again |
 | WSL uses too much memory | Create `C:\Users\<you>\.wslconfig` with `[wsl2]` and `memory=4GB` on the next line, then `wsl --shutdown` |
 | Ports 8000/3000 "already in use" | Another program uses them. Stop it, or change the left-hand port in `compose.yaml` (e.g. `"8001:8000"`) |
