@@ -10,7 +10,7 @@ Audience: total beginners on Windows lab PCs, possibly **without admin rights**.
 - [ ] Confirm this repo is a **template repository** (Settings → General → ✅ Template repository).
 
 ### The day before
-- [ ] Dry run every lab yourself in a **fresh** Codespace from the template, timing each one.
+- [ ] Dry run every lab yourself in a **fresh** Codespace from the template, timing each one. Include creating the `Protect main` ruleset (Lab 2) and adding the required checks (Lab 5): GitHub's Settings screens change, so update the click-steps if needed.
 - [ ] Pre-check Docker Hub pulls work from a Codespace (`docker pull nginx:alpine`).
 - [ ] Test the [backup plan](#-backup-plan-iximiuz-labs-docker-playground) in an iximiuz Docker playground (sign-in, `docker --version`, `bash scripts/start.sh`, open port 8000) and put the steps on a slide.
 - [ ] Print or share the [cheat sheet](../docs/cheatsheet.md).
@@ -26,15 +26,17 @@ Audience: total beginners on Windows lab PCs, possibly **without admin rights**.
 |---|---|---|---|
 | 09:00 | 0 Setup | The DevOps loop; "automate the boring stuff" | Unverified GitHub emails; slow Codespace start |
 | 09:45 | 1 Linux | Command anatomy, Tab completion, Ctrl+C | Paste shortcut (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>); case-sensitive names |
-| 10:45 | 2 Git | Draw *working → staging → commit → push* | `git commit` without `-m` opens an editor (`:wq`) |
+| 10:45 | 2 Git | Draw *working → staging → commit → push*. Then students **protect `main`** with a ruleset and watch a direct push get rejected (`GH013`): from here on, every change is branch → PR → merge | `git commit` without `-m` opens an editor (`:wq`). Ruleset must have an **empty bypass list**, or the owner can still push to `main` |
 | 11:45 | 3 Docker | Image = recipe, container = the cake 🎂 | Port pop-ups; leftover containers holding ports |
 | 13:30 | 4 Compose | Services talk by name; data lives in Redis | Lab 3 container still on port 8000 → `docker rm -f my-app` |
 | 14:15 | 💬 Discussion (30 min, no hands-on) | Show the 5 diagrams. VM = house, container = apartment; Kubernetes = robot keeping "3 copies" alive; monolith vs microservices = kitchen vs food court; API = the kitchen's order window. Status codes: "4xx = you asked wrong, 5xx = we broke" (restaurant analogy). Optional 1-min demo: `curl -i` on `/`, `/health`, `/nope` (404) | Don't let it turn into a Kubernetes tutorial. Park deep questions for the [roadmap](../docs/roadmap.md). Stress "start simple" |
-| 14:45 | 5 CI/CD | Show the red ❌ run on the projector, then fix it together | First run may need "enable workflows" in the Actions tab |
+| 14:45 | 5 CI/CD | Students add **Run tests** + **Build…** as required checks, then show the red ❌ PR with **Merging is blocked** on the projector, and fix it together | First run may need "enable workflows" in the Actions tab |
 | 16:00 | 6 Cloud/IaC/Monitoring | Pizza-as-a-service; plan/apply/destroy; "monitoring = smoke alarm" | Grafana "No data" until traffic is generated |
 | 17:00 | 7 Wrap-up | Quiz, roadmap, **stop Codespaces** | |
 
-**If you're running late**, shorten the discussion to Part 1 only (15 min; give Part 2 as reading). Also safe to skip: Lab 2 step 6 (branches/PR), Lab 3 mini challenge, Lab 6 Part A (talk through it instead), the Terraform Docker stretch.
+**Branch protection isn't copied from the template.** Each student protects their own copy in Lab 2, step 6. If someone skipped it, their direct pushes still work: help them add the ruleset before Lab 5.
+
+**If you're running late**, shorten the discussion to Part 1 only (15 min; give Part 2 as reading). Also safe to skip: Lab 3 mini challenge, Lab 6 Part A (talk through it instead), the Terraform Docker stretch.
 
 **Early finishers:** mini challenges at the end of each lab; [roadmap](../docs/roadmap.md) project ideas.
 

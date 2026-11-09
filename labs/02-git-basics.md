@@ -92,13 +92,55 @@ git commit -am "Add a note about commits"   # -a stages changed files, -m adds t
 git push
 ```
 
-### 6. Branches & pull requests (how teams work)
-A **branch** is a parallel copy where you can work safely without breaking `main`.
+### 6. Protect `main` (how real teams work) 🔒
+So far you pushed straight to `main`. In real teams **nobody does that**: `main` is what users get, so every change goes through a **branch** and a **pull request (PR)** where the robots (CI) and teammates check it first. Let's make GitHub enforce that on your repo.
+
+On GitHub, in **your** repo:
+1. **Settings** → **Rules** → **Rulesets** → **New ruleset** → **New branch ruleset**.
+2. **Ruleset name:** `Protect main` · **Enforcement status:** **Active**.
+3. **Bypass list:** leave it **empty** (so the rule applies to you too).
+4. **Target branches** → **Add target** → **Include default branch**.
+5. Under **Rules**, tick:
+   - ✅ **Restrict deletions** (usually ticked already)
+   - ✅ **Require a pull request before merging** → *Required approvals*: **0** (you're working alone today)
+   - ✅ **Block force pushes** (usually ticked already)
+6. Click **Create**.
+
+<details><summary>On your own PC with GitHub CLI? One command instead</summary>
+
+(Codespaces' built-in login isn't allowed to change repo settings, so use the website there.)
 ```bash
-git switch -c my-first-branch       # create and move to a new branch
+gh api -X POST repos/{owner}/{repo}/rulesets --input - <<'EOF'
+{"name":"Protect main","target":"branch","enforcement":"active",
+ "conditions":{"ref_name":{"include":["~DEFAULT_BRANCH"],"exclude":[]}},
+ "rules":[{"type":"deletion"},{"type":"non_fast_forward"},
+  {"type":"pull_request","parameters":{"required_approving_review_count":0,"dismiss_stale_reviews_on_push":false,
+   "require_code_owner_review":false,"require_last_push_approval":false,"required_review_thread_resolution":false}}]}
+EOF
+```
+</details>
+
+**Prove it works:** try to push straight to `main`:
+```bash
+echo "- Direct pushes to main are blocked" >> NOTES.md
+git commit -am "Try a direct push"
+git push
+```
+❌ GitHub refuses:
+```
+remote: error: GH013: Repository rule violations found for refs/heads/main.
+remote: - Changes must be made through a pull request.
+ ! [remote rejected] main -> main (push declined due to repository rule violations)
+```
+That's exactly what we want. Your commit is still safe on your computer. Next you'll send it the right way.
+
+### 7. Branch → push → pull request → merge
+A **branch** is a parallel copy where you can work safely without breaking `main`. Move the commit you just made onto a new branch:
+```bash
+git switch -c my-first-branch       # create a branch (it includes your new commit)
 echo "- Branches keep main safe" >> NOTES.md
 git commit -am "Add a note about branches"
-git push -u origin my-first-branch
+git push -u origin my-first-branch  # ✅ pushing a branch is allowed
 ```
 Now open a **pull request (PR)**: a request to merge your branch into `main`. Do it from the VS Code terminal with GitHub CLI:
 ```bash
@@ -109,8 +151,17 @@ gh pr merge --merge --delete-branch   # merge it, delete the branch, switch back
 `gh pr merge` also switches you back to `main` and pulls the merged change. Check:
 ```bash
 git branch        # * main
-cat NOTES.md      # your branch's line is now in main
+git status        # "Your branch is up to date with 'origin/main'"
+cat NOTES.md      # both new lines are now in main
 ```
+
+> 🔁 **From now on, every change follows the same 4 steps:**
+> ```bash
+> git switch -c NAME-OF-CHANGE                 # 1. branch
+> git commit -am "What and why"                # 2. commit (repeat as needed)
+> git push -u origin NAME-OF-CHANGE            # 3. push the branch
+> gh pr create --fill && gh pr merge --merge --delete-branch   # 4. PR + merge
+> ```
 
 <details><summary>Prefer clicking? Do it on the website instead</summary>
 
@@ -123,7 +174,8 @@ You can also use the **GitHub Pull Requests** panel in the VS Code sidebar.
 </details>
 
 ## ✅ Checkpoint
-- [ ] `NOTES.md` is visible on GitHub with 3 notes
+- [ ] `NOTES.md` is visible on GitHub with 4 notes
+- [ ] A direct `git push` to `main` was **rejected** by your `Protect main` ruleset
 - [ ] You merged one pull request (`gh pr list --state merged` shows it)
 - [ ] You can explain *add → commit → push* to your neighbour
 
@@ -138,6 +190,9 @@ git restore NOTES.md
 |---|---|
 | `Please tell me who you are` | Do step 1. More Git settings problems: [Git config troubleshooting](#-git-config-troubleshooting) |
 | `nothing to commit` | You haven't changed anything, or forgot to save the file (<kbd>Ctrl</kbd>+<kbd>S</kbd>) |
+| `GH013: Repository rule violations` / `Changes must be made through a pull request` | Your `main` is protected (step 6). Good! Move your work to a branch: `git switch -c my-fix`, `git push -u origin my-fix`, then `gh pr create --fill` |
+| After a rejected push, `main` says *ahead of 'origin/main' by 1 commit* | Your commit is only local. `git switch -c my-fix` takes it with you; then on `main` run `git switch main && git reset --hard origin/main` to clean up |
+| No **Rules → Rulesets** in Settings | Use **Settings → Branches → Add classic branch protection rule**: pattern `main`, tick **Require a pull request before merging** and **Do not allow bypassing the above settings** |
 | `rejected… fetch first` | Someone (maybe you, on GitHub) changed `main`. Run `git pull`, then `git push` again |
 | `gh: command not found` | Codespaces: rebuild with **F1 → Codespaces: Rebuild Container**. Own PC: [Windows setup step 7](../docs/local-setup-windows.md#7-install-github-cli-and-sign-in) |
 | `gh` says *not logged in* or `git push` asks for a password | Run `gh auth login`, then `gh auth setup-git` |
