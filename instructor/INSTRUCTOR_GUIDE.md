@@ -12,7 +12,7 @@ Audience: total beginners on Windows lab PCs, possibly **without admin rights**.
 ### The day before
 - [ ] Dry run every lab yourself in a **fresh** Codespace from the template, timing each one.
 - [ ] Pre-check Docker Hub pulls work from a Codespace (`docker pull nginx:alpine`).
-- [ ] Have the [backup plan](#backup-plan-play-with-docker) ready on a slide.
+- [ ] Test the [backup plan](#-backup-plan-killercoda-browser-playground) in a Killercoda playground (sign-in, `docker --version`, `bash scripts/start.sh`) and put the steps on a slide.
 - [ ] Print or share the [cheat sheet](../docs/cheatsheet.md).
 
 ### On the day
@@ -40,17 +40,32 @@ Audience: total beginners on Windows lab PCs, possibly **without admin rights**.
 ## 💰 Codespaces cost
 Personal GitHub accounts include a **free monthly Codespaces allowance** (GitHub currently lists it in core-hours. Check <https://docs.github.com/billing/managing-billing-for-github-codespaces/about-billing-for-github-codespaces> for current numbers). This repo requests a 2-core machine, so one seminar day uses only a small part of the allowance. Remind students to **stop** their Codespace at the end.
 
-## 🛟 Backup plan: Play with Docker
-If Codespaces is blocked or unavailable for some students:
-1. Go to <https://labs.play-with-docker.com>, sign in with a free **Docker Hub** account, click **Start → + Add new instance**.
-2. In the terminal:
+## 🛟 Backup plan: Killercoda browser playground
+If Codespaces is blocked or unavailable for some students, use a free Linux playground in the browser.
+
+> ⚠️ **Play with Docker (labs.play-with-docker.com) is shut down.** Its site says it is *"unavailable starting March 1, 2026"*. Don't put it on your slides.
+
+1. Go to <https://killercoda.com/playgrounds/scenario/ubuntu> and sign in (free; GitHub or Google login works).
+2. A terminal opens. Check Docker, and install it if the playground doesn't have it:
+   ```bash
+   docker --version || curl -fsSL https://get.docker.com | sh
+   docker compose version
+   ```
+3. Get the labs (public repo, so no login needed to clone):
    ```bash
    git clone https://github.com/YOUR-USERNAME/devops-roadmap-basics.git
    cd devops-roadmap-basics
+   bash scripts/start.sh
    ```
-3. Labs 1, 3 and 4 work fully (open ports using the port badges at the top). Lab 2 works for local commits (pushing needs a GitHub token, so skip the push steps). Lab 5 is done on github.com only (edit files in the browser with the ✏️ button; Actions still runs). Lab 6: monitoring works; Terraform isn't preinstalled, so demo it from your screen.
+4. Open ports with Killercoda's **Traffic / Ports** menu (top right): type `8000`, `3000` or `9090`. `curl localhost:8000` works in the terminal.
 
-Sessions last 4 hours, so start a new instance after lunch.
+**What works there:** Labs 1, 3, 4 and 6 (monitoring) fully. Lab 2 works for local commits; to push, students need `gh auth login` (install `gh` as in the [Windows guide, step 7](../docs/local-setup-windows.md#7-install-github-cli-and-sign-in)), or they skip the push steps. Lab 5 can be done on github.com only (edit files in the browser with the ✏️ button; Actions still runs). Terraform isn't preinstalled, so demo Lab 6 Part A from your screen.
+
+**Limits:** free sessions are time-limited (around 1 hour at the time of writing) and are wiped when they end. Check the current limit on the site the day before. Students should **push their work before the timer ends**, then start a new playground and `git clone` again.
+
+**Second option:** [iximiuz Labs Docker playground](https://labs.iximiuz.com/playgrounds/docker): a Linux server with Docker preinstalled, free account, also time-limited.
+
+**Last resort:** pair students without a working environment with a neighbour who has one, and swap the driver role each lab.
 
 ## 🖥️ Your own demo machine
 - **Mac:** Colima works well (`colima start --cpu 2 --memory 4`). Note macOS uses port 5000 for AirPlay, which is why the app uses **8000**.
