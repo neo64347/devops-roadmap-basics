@@ -76,6 +76,9 @@ Builds and looks after the **road** that code travels on: CI/CD pipelines, conta
 ### 1. Create your own copy of the `devops-roadmap-basics` template
 1. Sign in to GitHub.
 2. Open the instructor's [`devops-roadmap-basics` template repository](https://github.com/neo64347/devops-roadmap-basics) and click the green **Use this template** button → **Create a new repository**.
+
+   ![The Use this template button on the instructor's GitHub repository](../docs/images/use-template-button.png)
+
 3. **Repository name:** `devops-roadmap-basics`. Keep it **Public**. Click **Create repository**.
 4. Wait for GitHub to create it. Confirm the new repository shows the project files and folders (for example, `app`, `labs`, and `compose.yaml`) before opening a Codespace.
 
