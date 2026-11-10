@@ -73,12 +73,12 @@ Builds and looks after the **road** that code travels on: CI/CD pipelines, conta
 
 ## 🛠️ Steps
 
-### 1. Make your own copy of this repo
+### 1. Create your own copy of the `devops-roadmap-basics` template
 1. Sign in to GitHub.
-2. Open the seminar repository and click the green **Use this template** button → **Create a new repository**.
+2. Open the instructor's [`devops-roadmap-basics` template repository](https://github.com/neo64347/devops-roadmap-basics) and click the green **Use this template** button → **Create a new repository**.
 3. **Repository name:** `devops-roadmap-basics`. Keep it **Public**. Click **Create repository**.
 
-> Why your own copy? You'll push changes and run pipelines, and you need to own the repo to do that.
+> This creates a separate copy under your GitHub account. You'll push changes and run pipelines in your copy, while the instructor's template stays unchanged.
 
 ### 2. Open a Codespace
 1. In **your** new repo, click **Code** → **Codespaces** tab → **Create codespace on main**.
