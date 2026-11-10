@@ -99,6 +99,15 @@ terraform --version
 
 ✅ **Checkpoint:** each command prints a version number, for example `Docker version 2x.x.x`.
 
+> **Python test prerequisite:** Python is ready to use, but the app's test tools (including `pytest`) are project dependencies and are not preinstalled in every environment. Install them in a virtual environment from the `app` folder (this also avoids Debian/Ubuntu's externally-managed Python restriction):
+> ```bash
+> cd app
+> python3 -m venv .venv
+> source .venv/bin/activate
+> python -m pip install -r requirements.txt -r requirements-dev.txt
+> ```
+> Keep this terminal open for Lab 5, or activate the environment again in a new terminal with `source app/.venv/bin/activate` from the repository root.
+
 ## 🆘 Troubleshooting
 
 | Problem | Fix |

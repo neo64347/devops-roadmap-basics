@@ -23,7 +23,10 @@ Imagine 10 developers changing the same app every day. Who checks that nothing b
 ### 1. Run the tests yourself first
 ```bash
 cd app
-pytest -v
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt -r requirements-dev.txt
+python -m pytest -v
 cd ..
 ```
 ✅ `3 passed`. Look at `app/tests/test_app.py`: each `test_…` function checks one thing.
@@ -99,7 +102,7 @@ On the same branch, either change the greeting back, **or** update the test to m
 ```python
     assert b"Hi there!" in response.data
 ```
-Run `cd app && pytest -v && cd ..` locally first, then push to the **same branch**. The PR updates by itself:
+Run `cd app && python -m pytest -v && cd ..` locally first (with the app's virtual environment activated), then push to the **same branch**. The PR updates by itself:
 ```bash
 git commit -am "Update test for new greeting"
 git push
@@ -144,7 +147,7 @@ In real projects, one more job would **push the image to a registry** and **depl
 | Problem | Fix |
 |---|---|
 | No runs in the Actions tab | Click **Actions** → enable workflows if GitHub asks ("I understand my workflows…") |
-| `ModuleNotFoundError` when running pytest | Run it from inside the `app` folder: `cd app && pytest -v` |
+| `pytest: command not found`, `ModuleNotFoundError` or `externally-managed-environment` | From the `app` folder, create and activate a virtual environment with `python3 -m venv .venv` and `source .venv/bin/activate`, then install dependencies with `python -m pip install -r requirements.txt -r requirements-dev.txt` and run `python -m pytest -v`. If `venv` is unavailable, install your OS's Python venv package first (for Debian/Ubuntu: `sudo apt install python3-venv`). |
 | `gh pr checks` says *no checks reported* | The run hasn't started yet. GitHub can take **up to 1–2 minutes** to start CI on a new PR. Wait, then run `gh pr checks --watch` again |
 | `GH013` / push to `main` rejected | `main` is protected (Lab 2). Push a branch and open a PR instead |
 | Can't find **Run tests** under *Add checks* | The checks must have run at least once: finish step 3 first, wait for ✅, then add them |
