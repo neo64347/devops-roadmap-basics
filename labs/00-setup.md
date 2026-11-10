@@ -77,10 +77,13 @@ Builds and looks after the **road** that code travels on: CI/CD pipelines, conta
 1. Sign in to GitHub.
 2. Open the instructor's [`devops-roadmap-basics` template repository](https://github.com/neo64347/devops-roadmap-basics) and click the green **Use this template** button → **Create a new repository**.
 3. **Repository name:** `devops-roadmap-basics`. Keep it **Public**. Click **Create repository**.
+4. Wait for GitHub to create it. Confirm the new repository shows the project files and folders (for example, `app`, `labs`, and `compose.yaml`) before opening a Codespace.
 
 > This creates a separate copy under your GitHub account. You'll push changes and run pipelines in your copy, while the instructor's template stays unchanged.
 >
 > **Important:** Do not open a Codespace from the instructor's template repository. You can view it, but you don't have permission to push changes there. Open the Codespace from the new repository under your own GitHub account.
+>
+> If GitHub shows a **Quick setup** page with commands to create or push an existing repository, that repository is empty and was not created from the template. Go back to the instructor's template and use **Use this template**. If the empty repository already uses the name `devops-roadmap-basics`, choose another name for the template copy or delete the empty repository first.
 
 ### 2. Open a Codespace
 1. In **your** new repo, click **Code** → **Codespaces** tab → **Create codespace on main**.
