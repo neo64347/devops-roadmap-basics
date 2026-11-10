@@ -79,6 +79,8 @@ Builds and looks after the **road** that code travels on: CI/CD pipelines, conta
 3. **Repository name:** `devops-roadmap-basics`. Keep it **Public**. Click **Create repository**.
 
 > This creates a separate copy under your GitHub account. You'll push changes and run pipelines in your copy, while the instructor's template stays unchanged.
+>
+> **Important:** Do not open a Codespace from the instructor's template repository. You can view it, but you don't have permission to push changes there. Open the Codespace from the new repository under your own GitHub account.
 
 ### 2. Open a Codespace
 1. In **your** new repo, click **Code** → **Codespaces** tab → **Create codespace on main**.
@@ -113,6 +115,7 @@ terraform --version
 | Problem | Fix |
 |---|---|
 | No **Use this template** button | Make sure you're signed in to GitHub |
+| Codespaces says **You don't have push permissions** | You opened a Codespace from the instructor's template. Create your own repository with **Use this template**, then open a Codespace from that new repository |
 | Codespace stuck on "Setting up" for 5+ minutes | Refresh the page. Still stuck? Go to <https://github.com/codespaces>, delete it, and create a new one |
 | `docker: command not found` | Wait a minute (it may still be installing), then open a new terminal |
 | Codespaces not available for your account | Ask the instructor for the backup: a free [iximiuz Labs Docker playground](https://labs.iximiuz.com/playgrounds/docker) in the browser ([steps](../instructor/INSTRUCTOR_GUIDE.md#-backup-plan-iximiuz-labs-docker-playground)) |
