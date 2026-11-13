@@ -5,7 +5,7 @@
 #
 # Only touches what the labs create:
 #   Lab 3: web1, my-app (+ hello-world test containers)
-#   Lab 4/6: the Compose stack in this folder (web, redis, prometheus, grafana)
+#   Lab 4/6: the Compose stack in this folder (web, redis, prometheus, grafana, postgres)
 #   Lab 6 stretch: terraform-nginx
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -15,11 +15,11 @@ command -v docker >/dev/null || { echo "docker not found: nothing to clean."; ex
 
 echo "🧹 Stopping the lab containers..."
 
-# Lab 4 / Lab 6: the Compose stack (all profiles, so Grafana + Prometheus too)
+# Lab 4 / Lab 6: the Compose stack (all profiles, including the optional IoT demo)
 if [[ $ALL -eq 1 ]]; then
-  docker compose --profile monitoring down --remove-orphans --volumes --rmi local 2>&1 | grep -vE '^\s*$' | sed 's/^/   /'
+  docker compose --profile monitoring --profile iot --profile iot-simulator down --remove-orphans --volumes --rmi local 2>&1 | grep -vE '^\s*$' | sed 's/^/   /'
 else
-  docker compose --profile monitoring down --remove-orphans 2>&1 | grep -vE '^\s*$' | sed 's/^/   /'
+  docker compose --profile monitoring --profile iot --profile iot-simulator down --remove-orphans 2>&1 | grep -vE '^\s*$' | sed 's/^/   /'
 fi
 
 # Lab 6 stretch: prefer Terraform's own destroy so its state stays correct
@@ -38,7 +38,7 @@ hello=$(docker ps -aq --filter ancestor=hello-world)
 
 if [[ $ALL -eq 1 ]]; then
   echo "🗑️  Removing lab images..."
-  for img in my-app:v1 hello-world:latest nginx:alpine redis:7-alpine prom/prometheus:v2.53.0 grafana/grafana:11.1.0; do
+  for img in my-app:v1 hello-world:latest nginx:alpine redis:7-alpine postgres:16-alpine eclipse-mosquitto:2 prom/prometheus:v2.53.0 grafana/grafana:11.1.0; do
     docker image inspect "$img" >/dev/null 2>&1 && docker rmi "$img" >/dev/null 2>&1 && echo "   removed image $img"
   done
 fi
