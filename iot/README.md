@@ -20,6 +20,9 @@ MQTT does not write to PostgreSQL by itself. `mqtt_bridge.py` subscribes to mess
 
 - [Sign up for Grafana Cloud](https://grafana.com/auth/sign-up/create-user) to host and view the IoT dashboard.
 - [Sign up for Supabase](https://supabase.com/dashboard/sign-up) to create the hosted PostgreSQL database.
+- Optional: [Sign up for Vercel](https://vercel.com/signup) or [Netlify](https://app.netlify.com/signup) if you later build a web frontend for the sensor data.
+
+Vercel and Netlify are frontend hosting examples; they do not replace Supabase or Grafana Cloud, and their serverless functions are not a place to run this always-on MQTT bridge. Keep the bridge on a server/container that can maintain an MQTT connection. Never put Supabase database passwords or service-role keys in browser code.
 
 ## 1. Try the local simulation
 
@@ -106,5 +109,35 @@ The bridge connects to the configured MQTT broker and Supabase PostgreSQL URL. E
 3. Select the Supabase PostgreSQL data source when Grafana prompts for it.
 
 The dashboard plots 5-minute average voltage by sensor. Grafana Cloud queries Supabase; it does not subscribe to MQTT. Grafana Cloud must be able to reach the database and cannot connect to your computer's `localhost`. Use the panel's **Inspect → Data** menu to export CSV.
+
+## 5. Optional: deploy a custom web frontend
+
+The repository does not currently include a separate web frontend; Grafana Cloud is the included dashboard. If you build a frontend (for example with Vite or Next.js) to display sensor readings, you can deploy that frontend with either provider:
+
+### Vercel
+
+1. Push the frontend project to GitHub. It should have its own `package.json` and build script.
+2. In [Vercel](https://vercel.com/signup), choose **Add New → Project**, import the repository, and select the frontend's root directory if it is in a subfolder.
+3. Check the detected framework, build command, and output directory, then add the Supabase environment variables below in **Project Settings → Environment Variables**.
+4. Deploy. Later pushes to the connected branch trigger new deployments.
+
+See the [Vercel Git deployment guide](https://vercel.com/docs/git).
+
+### Netlify
+
+1. Push the frontend project to GitHub. It should have its own `package.json` and build script.
+2. In [Netlify](https://app.netlify.com/signup), choose **Add new site → Import an existing project**, connect GitHub, and select the repository and branch.
+3. Set the base directory to the frontend folder if it is in a subfolder. For a typical Vite app, use build command `npm run build` and publish directory `dist`; follow your framework's settings if different.
+4. Add the Supabase environment variables below in **Site configuration → Environment variables**, then deploy.
+
+See Netlify's [repository deployment guide](https://docs.netlify.com/start/choose-your-path/#connect-your-repo-to-deploy).
+
+### Connect the frontend safely to Supabase
+
+For Vite, configure `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. For Next.js, use `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Get the project URL and publishable/anon key from the Supabase project settings; add the variables in your hosting provider's project settings and redeploy after changing them.
+
+Browser code is public: never put a PostgreSQL connection string, database password, or Supabase `service_role` key in frontend code or public environment variables. The Supabase anon/publishable key is intended for client apps, but access must be protected by Row Level Security (RLS). For a public demo, only make non-sensitive sample telemetry readable to `anon`; for real sensor data, require authenticated access or read through a secured backend. Do not copy the demo's open-read policy to private telemetry.
+
+These hosting services deploy the web frontend, not this Python MQTT subscriber. Keep `mqtt_bridge.py` on a persistent server/container that can maintain an MQTT connection; use Grafana Cloud for the included dashboard.
 
 For detailed Supabase SQL and cloud setup, see the [IoT demo guide](../docs/iot-sensor-demo.md).
