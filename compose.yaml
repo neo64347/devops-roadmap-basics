@@ -18,6 +18,64 @@ services:
     image: redis:7-alpine
     restart: "no"
 
+  postgres:
+    image: postgres:16-alpine
+    restart: "no"
+    profiles: ["iot"]
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_DB: iot_demo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: local_iot_demo_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./iot/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./iot/database/local-roles.sql:/docker-entrypoint-initdb.d/02-local-roles.sql:ro
+
+  mqtt:
+    image: eclipse-mosquitto:2
+    restart: "no"
+    profiles: ["iot"]
+    ports:
+      - "127.0.0.1:1883:1883"
+    volumes:
+      - ./iot/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+  iot-bridge:
+    build: ./iot
+    restart: "no"
+    profiles: ["iot"]
+    command: ["python", "mqtt_bridge.py"]
+    environment:
+      MQTT_HOST: ${IOT_MQTT_HOST:-mqtt}
+      MQTT_PORT: ${IOT_MQTT_PORT:-1883}
+      MQTT_TLS: ${IOT_MQTT_TLS:-false}
+      MQTT_USERNAME: ${IOT_MQTT_USERNAME:-}
+      MQTT_PASSWORD: ${IOT_MQTT_PASSWORD:-}
+      MQTT_TOPIC: sensors/+/voltage
+      DB_HOST: ${IOT_DB_HOST:-postgres}
+      DB_PORT: ${IOT_DB_PORT:-5432}
+      DB_NAME: ${IOT_DB_NAME:-iot_demo}
+      DB_USER: ${IOT_DB_USER:-iot_writer}
+      DB_PASSWORD: ${IOT_DB_PASSWORD:-local_iot_writer_password}
+      DB_SSLMODE: ${IOT_DB_SSLMODE:-disable}
+      DATABASE_URL: ${IOT_DATABASE_URL:-}
+      MQTT_URL: ${IOT_MQTT_URL:-}
+    depends_on:
+      - postgres
+      - mqtt
+
+  iot-simulator:
+    build: ./iot
+    restart: "no"
+    profiles: ["iot-simulator"]
+    command: ["python", "mqtt_simulator.py"]
+    environment:
+      MQTT_HOST: mqtt
+    depends_on:
+      - mqtt
+
   prometheus:
     image: prom/prometheus:v2.53.0
     restart: "no"
@@ -43,3 +101,6 @@ services:
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
     depends_on:
       - prometheus
+
+volumes:
+  postgres_data:

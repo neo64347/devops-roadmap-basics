@@ -10,6 +10,8 @@ The lab stack has three things you open in a browser:
 
 Redis (port 6379) has no browser page. Only the web app talks to it.
 
+Optional: the [IoT demo](iot-sensor-demo.md) uses local ports **5432** (PostgreSQL) and **1883** (MQTT). Its IoT dashboard is imported into Grafana Cloud, not the local Grafana.
+
 ---
 
 ## ⚡ The quick way: one command
