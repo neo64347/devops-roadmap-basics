@@ -8,3 +8,4 @@ __pycache__/
 *.tfstate.*
 iac/output/
 .DS_Store
+.track
